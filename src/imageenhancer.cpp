@@ -7,23 +7,33 @@ namespace simG
 {
 	void ImageEnhancer::rescale(cv::Mat& img, std::pair<int, int> dim) const
 	{
-		cv::Size mat_size = img.size();
-		int interpolation_flag;
-
-		if ((dim.first > mat_size.width) && (dim.second > mat_size.height))
+		cv::Size img_size = img.size();
+		// if image has the target-dim already, simply return
+		if (img_size.width == dim.first && img_size.height == dim.second)
 		{
-			interpolation_flag = cv::INTER_CUBIC;
+			return;
 		}
-		else
-		{
-			interpolation_flag = cv::INTER_LINEAR;
-		}
-
-		cv::resize(img, img, cv::Size(dim.first, dim.second), 0, 0, interpolation_flag);
+		cv::resize(img, img, cv::Size(dim.first, dim.second), 0, 0, cv::INTER_LINEAR);
 	}
 
-	void ImageEnhancer::rotate(double degree) const
+	cv::Mat ImageEnhancer::rotate(const cv::Mat& img, double degree) const
 	{
+		// get rotation matrix for rotating the image around its center in pixel coordinates
+		cv::Point2f image_center(img.cols / 2.0, img.rows / 2.0);
+		cv::Mat rotation_matrix = cv::getRotationMatrix2D(image_center, degree, 1.0);
+
+		// determine bounding rectangle
+		cv::Rect2f bbox = cv::RotatedRect(cv::Point2f(), img.size(), degree).boundingRect2f();
+
+		// adjust transformation matrix
+		rotation_matrix.at<double>(0, 2) += bbox.width / 2.0 - img.cols / 2.0;
+		rotation_matrix.at<double>(1, 2) += bbox.height / 2.0 - img.rows / 2.0;
+
+		// transform
+		cv::Mat dst;
+		cv::warpAffine(img, dst, rotation_matrix, bbox.size());
+
+		return dst;
 	}
 
 	void ImageEnhancer::flip(cv::Mat& img, FlipMode fm) const
@@ -44,7 +54,8 @@ namespace simG
 		}
 	}
 
-	void ImageEnhancer::shiftBrightness(int factor) const
+	void ImageEnhancer::shiftBrightness(cv::Mat& img, double beta, double alpha /*= 1*/) const
 	{
+		img.convertTo(img, -1, alpha, beta);
 	}
 }

@@ -14,9 +14,9 @@ namespace simG
 		~ImageEnhancer() = default;
 
 		void rescale(cv::Mat& img, std::pair<int, int> dim) const;
-		void rotate(double degree) const;
+		cv::Mat rotate(const cv::Mat& img, double degree) const;
 		void flip(cv::Mat& img, FlipMode fm) const;
-		void shiftBrightness(int factor) const;
+		void shiftBrightness(cv::Mat& img, double beta, double alpha = 1) const;
 	private:
 		int default_interp = 0;
 	};
