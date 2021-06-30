@@ -63,7 +63,6 @@ int main()
 ```
 #### Generate Images
 ```cpp
- 
   if(!generator.isValid())
   {
     exit(1);
