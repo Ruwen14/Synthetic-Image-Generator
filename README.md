@@ -40,7 +40,11 @@ int main()
   simg::Directory backgroundDir("./backgrounds");
   int numberImagesToGenerate = 500;
   int maxObjectsPerImage = 5;
-  simG::ImageGenerator2D generator(maskDir, backgroundDir, numberImagesToGenerate, maxObjectsPerImage, params);
+  simG::ImageGenerator2D generator(maskDir, 
+                                   backgroundDir, 
+                                   numberImagesToGenerate, 
+                                   maxObjectsPerImage, 
+                                   params);
 ```
 #### (Optional) Add Annotator 
 ```cpp
