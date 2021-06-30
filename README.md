@@ -12,8 +12,6 @@
 #include "Utils/Directory.h"
 #include <iostream>
 
-
-
 // Modules are wrapped in namespace simG
 int main() 
 {
