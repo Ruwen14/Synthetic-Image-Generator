@@ -8,6 +8,12 @@
  
 # Demo
 ```cpp
+#include "ImageGenerator2D.h"
+#include "Utils/Directory.h"
+#include <iostream>
+
+
+
 // Modules are wrapped in namespace simG
 int main() 
 {
