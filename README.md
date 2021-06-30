@@ -21,6 +21,7 @@ int main() {
   //params.MaskAugs.brightness.brightness_range = { -20.5, 20.5 };
   
   std::string inputDir = "./transportation/car";
+  simG::Directory inputDir("./transportation/car");
   std::string outputDir = "./Test"
   int numberImagesToGenerate= 500;
   int maxObjectsPerImage = 5;
@@ -35,6 +36,13 @@ int main() {
   {
     generator.generate();
   }
+}
+```
+```cpp
+int main() {
+  int y = SOME_MACRO_REFERENCE;
+  int x = 5 + 6;
+  cout << "Hello World! " << x << std::endl();
 }
 ```
 
