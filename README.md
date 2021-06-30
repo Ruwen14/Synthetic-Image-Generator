@@ -59,7 +59,7 @@ int main()
                                    numberImagesToGenerate, 
                                    maxObjectsPerImage, 
                                    params,
-                                   &annotator); // ← add to constructor
+                                   &annotator); // ← pass annotator to generator
 ```
 #### Generate Images
 ```cpp
