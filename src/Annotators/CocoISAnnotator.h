@@ -9,6 +9,6 @@ namespace simG
 		CocoISAnnotator(const std::string& annofile_savepath);
 		~CocoISAnnotator() { std::cout << "CocoIsAnnotator destroyed" << "\n"; }
 
-		void annotateImg(const SynImg& synth_img, const SynImgMetaInfo& meta) override;
+		void annotateImg(const std::vector<cv::Mat>& masks, const ImgMetaInfo& meta) override;
 	};
 }

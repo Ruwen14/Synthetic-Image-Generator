@@ -7,7 +7,7 @@ namespace simG
 	{
 	}
 
-	void CocoISAnnotator::annotateImg(const SynImg& synth_img, const SynImgMetaInfo& meta)
+	void CocoISAnnotator::annotateImg(const std::vector<cv::Mat>& masks, const ImgMetaInfo& meta)
 	{
 		anno_file_ << "CocoIsAnnotor has written";
 	}

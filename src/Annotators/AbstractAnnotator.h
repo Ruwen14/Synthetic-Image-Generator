@@ -7,7 +7,7 @@
 namespace simG
 {
 	typedef std::ofstream AnnotationFile;
-	struct SynImgMetaInfo
+	struct ImgMetaInfo
 	{
 	};
 
@@ -25,7 +25,7 @@ namespace simG
 		AbstractAnnotator(const std::string& annofile_savepath);
 		virtual ~AbstractAnnotator() { std::cout << "AbstractAnnotator destroyed" << "\n"; }
 
-		virtual void annotateImg(const SynImg& synth_img, const SynImgMetaInfo& meta) = 0;
+		virtual void annotateImg(const std::vector<cv::Mat>& masks, const ImgMetaInfo& meta) = 0;
 		virtual void close();
 
 	protected:

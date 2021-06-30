@@ -1,5 +1,5 @@
 #pragma once
-#include "imageenhancer.h"
+#include "ImageAugmenter.h"
 #include "Annotators/AbstractAnnotator.h"
 #include "Utils/Directory.h"
 #include <iostream>
@@ -13,18 +13,18 @@ namespace simG
 {
 	namespace internal_
 	{
-		template<typename T>
-		struct Range
-		{
-			T lower;
-			T upper;
-		};
-
 		struct RescaleOptions
 		{
 			bool do_rescale = true;
-			std::pair<int, int> dimensions{ 1024,576 };
+			Dimensions dimensions{ 1024,576 };
 			int interpolation_mode = 0; // TODO cv InterplationFlags
+		};
+
+		struct CropOptions
+		{
+			bool do_crop = true;
+			bool keep_aspect = true;
+			Dimensions target_dim{ 800, 400 };
 		};
 
 		struct RotationOptions
@@ -36,23 +36,34 @@ namespace simG
 		struct BrightnessOptions
 		{
 			bool do_shift = true;
-			Range<double> brightness_range{ -20.5, 20.5 };
+			Range<double> brightness_range{ -200, 200.5 };
 		};
 
 		struct AxisFlippingOptions
 		{
-			float flip_prob = 1.0;
-			bool do_hozizontal_flip = true;
-			bool do_vertical_flip = true;
+			bool do_random_flip = true;
+			// introduces the possibility that the image is not flipped --> random[no_flip, vertical...]
+			bool include_no_flip = true; 
+		};
+
+		struct BackgroundAugmentations
+		{
+			CropOptions crop;
+			BrightnessOptions brightness;
+			AxisFlippingOptions axisflipping;
+		};
+
+		struct MaskAugmentations
+		{
+			BrightnessOptions brightness;
+			RotationOptions rotation;
 		};
 
 		struct ImageAugmentationOptions
 		{
-			bool random_noise = true;
-			RotationOptions Rotation;
-			RescaleOptions Rescaling;
-			BrightnessOptions ShiftBrightness;
-			AxisFlippingOptions AxisFlipping;
+			bool randomnoise = false;
+			BackgroundAugmentations BackgroundAugs;
+			MaskAugmentations MaskAugs;
 		};
 	} // end of namespace internal_
 
@@ -81,16 +92,16 @@ namespace simG
 		~ImageGenerator2D() = default;
 
 		cv::Mat generate();
-		bool is_valid() const;
-		bool has_finished() const;
+		bool isValid() const;
+		bool hasFinished() const;
 
 		std::stringstream error_log;
 		int image_count = 0;
 
 	private:
-		void augment_mask(cv::Mat& mask) const;
-		void augment_bckground(cv::Mat& bckr) const;
-		void compose() const;
+		void augmentMask(cv::Mat& maskSample) const;
+		void augmentBackground(cv::Mat& backgrSample) const;
+		void compose(const cv::Mat& srcComp1, const cv::Mat& srcComp2, cv::Mat& dst) const;
 		bool overlap() const;
 
 		Directory MaskDir_;
@@ -98,8 +109,8 @@ namespace simG
 		bool valid_flag_ = true;
 		int target_images_;
 		int obj_per_image_;
-		AugmentationParams AugParams_;
-		ImageEnhancer ImgEnhancer_;
-		AbstractAnnotator* Annotator_;
+		AugmentationParams augparams_;
+		ImageAugmenter augmenter_;
+		AbstractAnnotator* annotator_;
 	};
 }

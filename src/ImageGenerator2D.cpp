@@ -13,7 +13,7 @@ namespace simG
 		const AugmentationParams& params,
 		AbstractAnnotator* imageAnnotator
 	)
-		: MaskDir_(maskDir), BckgrndDir_(backgroundDir), target_images_(numberImages), obj_per_image_(objectsPerImage), AugParams_(params), Annotator_(imageAnnotator)
+		: MaskDir_(maskDir), BckgrndDir_(backgroundDir), target_images_(numberImages), obj_per_image_(objectsPerImage), augparams_(params), annotator_(imageAnnotator)
 	{
 		//if (MaskDir_.isEmpty())
 		//{
@@ -40,7 +40,7 @@ namespace simG
 	cv::Mat ImageGenerator2D::generate()
 	{
 		cv::Mat bckgr_sample = cv::imread(BckgrndDir_.relativeFilePath(BckgrndDir_.cycleEntry()), cv::IMREAD_COLOR);
-		augment_bckground(bckgr_sample);
+		augmentBackground(bckgr_sample);
 
 		for (int i = 0; i < obj_per_image_; i++)
 		{
@@ -54,61 +54,55 @@ namespace simG
 		return bckgr_sample;
 	}
 
-	bool ImageGenerator2D::is_valid() const
+	bool ImageGenerator2D::isValid() const
 	{
 		return this->valid_flag_;
 	}
 
-	bool ImageGenerator2D::has_finished() const
+	bool ImageGenerator2D::hasFinished() const
 	{
 		return this->image_count == this->target_images_;
 	}
 
-	void ImageGenerator2D::augment_mask(cv::Mat& mask) const
+	void ImageGenerator2D::augmentMask(cv::Mat& maskSample) const
 	{
+		const auto& mask_params = this->augparams_.MaskAugs;
 	}
 
-	void ImageGenerator2D::augment_bckground(cv::Mat& bckr) const
+	void ImageGenerator2D::augmentBackground(cv::Mat& backgrSample) const
 	{
-		ImgEnhancer_.rescale(bckr, AugParams_.Rescaling.dimensions);
+		const auto& background_parms = this->augparams_.BackgroundAugs;
+
+		//this->enhancer_.rescale(backgrSample, augparams_.rescaling.dimensions);
+		if (background_parms.crop.do_crop)
+		{
+			backgrSample = this->augmenter_.randomCrop(
+				backgrSample,
+				background_parms.crop.target_dim,
+				background_parms.crop.keep_aspect);
+		}
 
 		// AUGMENTATION: FLIP-IMAGE
-		auto flip_params = this->AugParams_.AxisFlipping;
-		if (Random::randomProb(flip_params.flip_prob))
+		if (background_parms.axisflipping.do_random_flip)
 		{
-			if (flip_params.do_hozizontal_flip && flip_params.do_vertical_flip)
-			{
-				ImgEnhancer_.flip(bckr, FlipMode::HORIZONTAL_AND_VERTICAL_FLIP);
-			}
-			else if (flip_params.do_hozizontal_flip)
-			{
-				ImgEnhancer_.flip(bckr, FlipMode::HORIZONTAL_FLIP);
-			}
-			else if (flip_params.do_vertical_flip)
-			{
-				ImgEnhancer_.flip(bckr, FlipMode::VERTICAL_FLIP);
-			}
+			this->augmenter_.randomFlip(
+				backgrSample, 
+				background_parms.axisflipping.include_no_flip);
 		}
 
 		// AUGMENTATION: CHANGE BRIGTHNESS
-		auto brigthness_params = this->AugParams_.ShiftBrightness;
-		if (brigthness_params.do_shift)
+		if (background_parms.brightness.do_shift)
 		{
-			double beta = Random::uniformDouble(brigthness_params.brightness_range.lower, brigthness_params.brightness_range.upper);
-			this->ImgEnhancer_.shiftBrightness(bckr, beta, 1);
+			this->augmenter_.randomBrightness(
+				backgrSample, 
+				background_parms.brightness.brightness_range);
 		}
 
-		//// AUGMENTATION: Rotate
-		//auto rotation_params = this->AugParams_.Rotation;
-		//if (rotation_params.do_rotate)
-		//{
-		//	double degree = Random::uniformInt(rotation_params.rotation_range.lower, rotation_params.rotation_range.upper);
-		//	bckr = this->ImgEnhancer_.rotate(bckr, degree);
-		//}
+		// Add rotation 180°
 
 	}
 
-	void ImageGenerator2D::compose() const
+	void ImageGenerator2D::compose(const cv::Mat& srcComp1, const cv::Mat& srcComp2, cv::Mat& dst) const
 	{
 	}
 

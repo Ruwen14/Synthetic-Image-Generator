@@ -2,6 +2,7 @@
 //
 #pragma once
 #include "ImageGenerator2D.h"
+#include "Annotators/CocoISAnnotator.h"
 //#include "annotator.h"
 //#include "imageenhancer.h"
 #include <iostream>
@@ -19,92 +20,68 @@ using std::chrono::duration_cast;
 using std::chrono::duration;
 using std::chrono::milliseconds;
 
-// paths must outlive all even compose and stuff or be copied
-//
-class Test
+
+void batchResize()
+{
+	simG::Directory InputDir("./src");
+	for (const auto& file : InputDir.entries)
+	{
+		std::string file_path = InputDir.relativeFilePath(file);
+	}
+}
+
+
+class Vehicle
+{
+	public:
+		virtual void doStuff() { std::cout << "Vehicle" << "\n"; }
+};
+
+class Boat : public Vehicle
 {
 public:
-	Test(const std::string& path) : d(path) {}
-
-	simG::Directory d;
+	void doStuff() override { std::cout << "Boat" << "\n"; }
 };
-template<typename T>
-struct Range
-{
-	T lower;
-	T upper;
-};
-
-
-
-
-
-
-
-
-//	cv::Size src_size = src.size();
-//	cv::Mat dest;
-//	cv::Point2f rotation_cntr((src.cols-1) / 2., (src.rows-1) / 2.);
-//	cv::Mat rotation_mat = cv::getRotationMatrix2D(rotation_cntr, angle, 1.0);
-//
-//	auto abs_cos = abs(rotation_mat.at<int>(0, 0));
-//	auto abs_sin = abs(rotation_mat.at<int>(0, 1));
-//
-//	auto bound_w = int(src_size.height * abs_sin + src_size.width * abs_cos);
-//	auto bound_h = int(src_size.height * abs_cos + src_size.width * abs_sin);
-//
-//	rotation_mat.at<int>(0, 2) += bound_w / 2 - ((src.cols - 1) / 2.);
-//	rotation_mat.at<int>(1, 2) += bound_h / 2 - ((src.rows - 1) / 2.);
-//
-//
-//
-//
-//	cv::warpAffine(src, dest, rotation_mat, cv::Size(bound_w, bound_h));
-//	return dest;
-//}
 
 int main()
 {
-	//
-	//
-	//	//std::unique_ptr<simG::AbstractGenerator> generator = std::make_unique<simG::ImageGenerator2D>("stuff", "stuff", 3000, params);
-	//
-	//	//auto iter = std::filesystem::directory_iterator(R"(C:\Users\ruwen\Desktop\iav_Werkstudent\Dataset\Datasat_keep_aspect\train\imags)");
-	//	//for (const auto& entry : std::filesystem::directory_iterator(R"(C:\Users\ruwen\Desktop\iav_Werkstudent\Dataset\Datasat_keep_aspect\train\imags)"))
-	//	//{
-	//	//}
-	//
-	//	//bool b = std::filesystem::is_directory(R"(C:\Users\ruwen\Desktop\iav_Werkstudent\Dataset\Datasat_keep_aspect\train\images)");
-	//
-	//	simG::Directory OutputDir("../Synthethic-Image-Generator");
-	//
 	simG::ImageGenerator2D::AugmentationParams params;
+
 
 
 	simG::ImageGenerator2D generator(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)",
 		R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test)", 500, 5, params);
 
-	cv::Mat img = cv::imread(R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test\t_img_klein0.png)", cv::IMREAD_COLOR);
+	cv::Mat img = cv::imread(R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test\background0.jpg)", cv::IMREAD_COLOR);
+
+	simG::ImageAugmenter augmenter;
+
+	//auto result = generator.generate();
+	simG::Directory D("./src");
 
 	auto start = std::chrono::high_resolution_clock::now();
 
-	//simG::print(r.upper);
+	std::vector<Vehicle> v;
+	Boat w;
+	v.push_back(w);
 
-	//simG::ImageEnhancer enhancer;
+	for (auto element: v)
+	{
+		element.doStuff();
+	}
 
-	//img = enhancer.rotate(img, 90);
-
-
+	//auto b = D.absoluteFilePath("ja");
 	
-	//simG::print(img.size());
-	auto result = generator.generate();
+	//cv::resize(img, img, cv::Size(1024, 576), 0, 0, cv::INTER_LINEAR);
 
-	//cv::imshow("Windows", result);
+	//cv::imshow("Windows", img);
 	//cv::waitKey(0);
 
-	//while (!ImgaGenerator.has_finished())
+	//auto result = generator.generate();
+
+	//while (!generator.hasFinished())
 	//{
-	//	ImgaGenerator.generate();
+	//	generator.generate();
 	//	//simG::print(ImgaGenerator.image_count);
 	//}
 
