@@ -1,7 +1,7 @@
 #pragma once
-#include "ImageAugmenter.h"
-#include "Annotators/AbstractAnnotator.h"
-#include "Utils/Directory.h"
+#include "imgaugmenter.h"
+#include "annotators/AbstractAnnotator.h"
+#include "utils/Directory.h"
 #include <iostream>
 #include <string>
 #include <vector>

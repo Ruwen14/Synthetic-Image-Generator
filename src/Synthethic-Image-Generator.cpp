@@ -1,12 +1,12 @@
 // Synthethic-Image-Generator.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 #pragma once
-#include "ImageGenerator2D.h"
-#include "Annotators/CocoISAnnotator.h"
+#include "imggenerator2d.h"
+#include "annotators/CocoISAnnotator.h"
 //#include "annotator.h"
 //#include "imageenhancer.h"
 #include <iostream>
-#include "Utils/Random.h"
+#include "utils/Random.h"
 //#include <filesystem>
 //#include <string>
 #include <chrono>

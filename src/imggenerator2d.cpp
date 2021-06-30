@@ -1,5 +1,5 @@
-#include "ImageGenerator2D.h"
-#include "Utils/Random.h"
+#include "imggenerator2d.h"
+#include "utils/Random.h"
 #include <filesystem>
 #include <opencv2/highgui.hpp>
 
