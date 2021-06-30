@@ -4,7 +4,7 @@
 # Requirements
 - CMake
 - OpenCV-4.5.0+
-- (Already Included) Json-Library
+- **(Already included!)** Json-Library
 
  
 # Demo
