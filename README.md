@@ -1,5 +1,10 @@
 # Synthetic-Image-Generator
  ImageGenerator C++
+
+# Requirements
+- CMake
+- OpenCV-4.5.0+
+
  
 # Demo
 ```cpp
