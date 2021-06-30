@@ -7,7 +7,7 @@
 int main() 
 {
 ```
-#### Settings - change degree of Augmentations
+#### Set Settings - change degree of Augmentations
 ```cpp
   simG::ImageGenerator2D::AugmentationParams params;
   // Defaults are equivalent to ↓↓↓. Change to your liking.
@@ -25,13 +25,28 @@ int main()
   params.MaskAugs.brightness.brightness_range = { -20.5, 20.5 };
   // ↑↑↑
 ```
-  
+#### Add Generator
+```cpp
   simG::Directory maskDir("./transportation/car");
   simg::Directory backgroundDir("./backgrounds");
   int numberImagesToGenerate = 500;
   int maxObjectsPerImage = 5;
   simG::CocoAnnotator annotator;
   simG::ImageGenerator2D generator(maskDir, backgroundDir, numberImagesToGenerate, maxObjectsPerImage, params, &annotator);
+```
+#### (Optional) Add Annotator 
+```cpp
+  simG::CocoAnnotator annotator("path-to-annotationfile");
+  // or 
+  simG::YoloAnnotator annotator("path-to-annotationfile");
+  // or ...
+  //                                                                                                        add to constructor
+  //                                                                                                               ↓↓↓
+  simG::ImageGenerator2D generator(maskDir, backgroundDir, numberImagesToGenerate, maxObjectsPerImage, params, &annotator);
+```
+#### Generate Images
+```cpp
+ 
   if(!ImgaGenerator.isValid())
   {
     exit(1);
@@ -43,5 +58,3 @@ int main()
   }
 }
 ```
-
-
