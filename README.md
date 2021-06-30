@@ -20,12 +20,11 @@ int main() {
   //params.MaskAugs.brightness.do_shift = true;
   //params.MaskAugs.brightness.brightness_range = { -20.5, 20.5 };
   
-  std::string inputDir = "./transportation/car";
-  simG::Directory inputDir("./transportation/car");
+  simG::Directory maskDir("./transportation/car");
+  simg::Directory backgroundDir("./backgrounds");
   std::string outputDir = "./Test"
-  int numberImagesToGenerate= 500;
   int maxObjectsPerImage = 5;
-  simG::ImageGenerator2D generator(inputDir, outputDir, numberImagesToGenerate, maxObjectsPerImage, params);
+  simG::ImageGenerator2D generator(maskDir, backgroundDir, numberImagesToGenerate, maxObjectsPerImage, params);
   
   if(!ImgaGenerator.isValid())
   {
