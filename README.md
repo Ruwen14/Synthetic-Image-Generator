@@ -20,9 +20,11 @@ int main() {
   //params.MaskAugs.brightness.do_shift = true;
   //params.MaskAugs.brightness.brightness_range = { -20.5, 20.5 };
   
-  std::string inputDir = R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)";
-  std::string outputDir = R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test)"
-  simG::ImageGenerator2D generator(inputDir, outputDir, 500, 5, params);
+  std::string inputDir = "./transportation/car";
+  std::string outputDir = "./Test"
+  int numberImagesToGenerate= 500;
+  int maxObjectsPerImage = 5;
+  simG::ImageGenerator2D generator(inputDir, outputDir, numberImagesToGenerate, maxObjectsPerImage, params);
   
   if(!ImgaGenerator.isValid())
   {
