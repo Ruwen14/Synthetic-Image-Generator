@@ -52,9 +52,13 @@ int main()
   // or 
   simG::YoloAnnotator annotator("path-to-annotationfile");
   // or ...
-  //                                                                                                        add to constructor
-  //                                                                                                               ↓↓↓
-  simG::ImageGenerator2D generator(maskDir, backgroundDir, numberImagesToGenerate, maxObjectsPerImage, params, &annotator);
+  
+  simG::ImageGenerator2D generator(maskDir, 
+                                   backgroundDir, 
+                                   numberImagesToGenerate, 
+                                   maxObjectsPerImage, 
+                                   params,
+                                   &annotator); // ← add to constructor
 ```
 #### Generate Images
 ```cpp
