@@ -37,7 +37,6 @@ x64/
 *.sln
 *.user
 *.vcxproj
-*.txt 
 *.json
 resources/
 Test/
