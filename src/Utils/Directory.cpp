@@ -1,9 +1,24 @@
 #include "Directory.h"
 #include <filesystem>
 #include "Random.h"
-
+#include <iostream>
+#include <sstream>
 namespace simG
 {
+
+	std::ostream& operator<<(std::ostream& os, const simG::Directory& obj)
+	{
+		std::stringstream outstream;
+		outstream << "./" << obj.dirName() << "[" << "\n";
+		for (const auto & entry : obj.entries)
+		{
+			outstream << entry << ", " << "\n";
+		}
+		outstream << "]";
+
+		return os << outstream.str();
+	}
+
 	Directory::Directory(const std::string& dir_path)
 		: dir_path(dir_path), entries(list_entries(dir_path))
 	{
@@ -46,9 +61,7 @@ namespace simG
 	std::string Directory::absoluteFilePath(const std::string& file_name) const
 	{
 		std::string rel_path = relativeFilePath(file_name);
-		std::filesystem::path path_obj(rel_path);
-
-		return std::filesystem::absolute(path_obj).string();
+		return std::filesystem::absolute(std::filesystem::path(rel_path)).string();
 	}
 
 	std::string Directory::absoluteDirPath() const
@@ -90,3 +103,5 @@ namespace simG
 		return file_entries;
 	}
 }
+
+
