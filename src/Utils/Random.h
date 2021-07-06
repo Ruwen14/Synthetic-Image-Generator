@@ -34,4 +34,38 @@ namespace simG {
 	private:
 		static std::mt19937 MTEngine_;
 	};
+
+	class ThreadSafeRandom
+	{
+	public:
+		static int uniformInt(int min, int max);
+
+		static double uniformDouble(double min, double max);
+
+		static bool randomProb(double probability);
+
+		// Lock list when shuffling, otherwise not threadsafe
+		template<typename T> static void shuffleList(std::vector<T>& list)
+		{
+			static thread_local auto seed = std::random_device{}();
+			static thread_local std::mt19937 gen(seed);
+			std::shuffle(list.begin(), list.end(), gen);
+		}
+
+		template<typename T> static std::vector<T> randomSamples(const std::vector<T>& vec, int number_samples = 1)
+		{
+			static thread_local auto seed = std::random_device{}();
+			static thread_local std::mt19937 gen(seed);
+
+			std::vector<T> samples;
+			std::sample(vec.begin(), vec.end(), std::back_inserter(samples), number_samples, gen);
+			return samples;
+		}
+
+
+	};
+
+
+
+
 }
