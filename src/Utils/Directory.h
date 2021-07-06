@@ -21,6 +21,7 @@ namespace simG
 	// Directory Class is inspired by QDir from the Qt-Framework and provides access to directories and their contents
 	class Directory
 	{
+		friend std::ostream& operator<<(std::ostream& os, const simG::Directory& obj);
 	public:
 		Directory(const std::string& dir_path);
 		~Directory() = default;
@@ -41,8 +42,10 @@ namespace simG
 
 		static bool createDirectory(const std::string& dir_path);
 
-	protected:
+	private:
 		std::vector<std::string> list_entries(const std::string& path) const;
 		int cycle_idx_ = -1; // used by nextEntry()
 	};
 }
+
+
