@@ -7,6 +7,8 @@
 //#include "imageenhancer.h"
 #include <iostream>
 #include "utils/Random.h"
+#include "utils/Directory.h"
+#include "utils/helpers.h"
 //#include <filesystem>
 //#include <string>
 #include <chrono>
@@ -14,12 +16,12 @@
 //#include "Utils/Directory.h"
 //#include "Utils/Random.h"
 #include "Exceptions.h"
+#include <omp.h>
 
 using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 using std::chrono::milliseconds;
-
 
 void batchResize()
 {
@@ -30,17 +32,116 @@ void batchResize()
 	}
 }
 
-
-enum class GeneratorInit { SUCCESS = 0, FAILED = 1, UNKNOWN_ERROR = 2 };
-
-
-GeneratorInit doStuff()
+//#include <iostream>
+//#include <vector>
+//#include <mutex>
+//#include <opencv2/opencv.hpp>
+//
+//using namespace cv;
+//using namespace std;
+//
+void load_images(simG::Directory dir) 
 {
-	return GeneratorInit::SUCCESS;
+	std::vector<cv::Mat>img_lst;
+	std::mutex mtx;
+
+	int count = 0;
+
+
+    #pragma omp parallel for  
+	for (int i = 0; i < dir.entries.size(); i++)
+	{
+		simG::print(omp_get_num_threads());
+
+		cv::Mat img = cv::imread(dir.absoluteFilePath(dir.entries[i]));
+		++count;
+		//mtx.lock();
+		//img_lst.push_back(img);
+		//mtx.unlock();
+	}
+	simG::print(count);
+	//mtx.lock();
+	//std::cout << "INFO: Loaded " << img_lst.size() << std::endl;
+	//mtx.unlock();
+	
 }
 
+void load_images_single(simG::Directory dir) {
+	std::vector<cv::Mat>img_lst;
+	std::mutex mtx;
+
+	int count = 0;
+
+	for (int i = 0; i < dir.entries.size(); i++)
+	{
+
+		cv::Mat img = cv::imread(dir.absoluteFilePath(dir.entries[i]));
+		++count;
+		//mtx.lock();
+		//img_lst.push_back(img);
+		//mtx.unlock();
+	}
+	simG::print(count);
+	//mtx.lock();
+	//std::cout << "INFO: Loaded " << img_lst.size() << std::endl;
+	//mtx.unlock();
+}
+
+
+class MultithreadGenerator
+{
+public:
+	MultithreadGenerator(const std::string& dirName) :m_Dir(dirName) { };
+	~MultithreadGenerator() = default;
+
+	void generate();
+	void generateThreaded(int workers = omp_get_num_procs());
+
+	int m_frameCount = 0;
+
+public:
+	simG::Directory m_Dir;
+};
+
+void MultithreadGenerator::generate()
+{
+	cv::Mat img;
+	for (int i = 0; i < this->m_Dir.entries.size(); i++)
+	{
+		img = cv::imread(m_Dir.absoluteFilePath(m_Dir.entries[i]));
+		++m_frameCount;
+
+	}
+}
+
+void MultithreadGenerator::generateThreaded(int workers /*= omp_get_num_procs()*/)
+{
+	cv::Mat img;
+#pragma omp parallel for num_threads(workers)
+	for (int i = 0; i < this->m_Dir.entries.size(); i++)
+	{
+		img = cv::imread(m_Dir.absoluteFilePath(m_Dir.entries[i]));
+
+#pragma omp critical
+		++m_frameCount;
+
+	}
+}
+
+int randomIntTS(int min, int max)
+{
+	static thread_local std::mt19937 gen(std::random_device{}());
+	std::uniform_int_distribution<int> dist(min, max);
+
+	return dist(gen);
+}
+
+
+
+bool compareFunction(std::string a, std::string b) { return a < b; }
 int main()
 {
+	omp_set_dynamic(0);
 	simG::ImageGenerator2D::AugmentationParams params;
 
 	// Defaults
@@ -61,23 +162,46 @@ int main()
 	simG::ImageGenerator2D generator(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)",
 		R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test)", 500, 5, params);
 
-	cv::Mat img = cv::imread(R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test\background0.jpg)", cv::IMREAD_COLOR);
-
-	simG::ImageAugmenter augmenter;
+	simG::Directory testDir(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)");
 
 
-	if (doStuff() == GeneratorInit::SUCCESS)
-	{
-		simG::print("ja");
-	}
-
-	//auto result = generator.generate();
-	simG::Directory D("./src");
+	MultithreadGenerator mGen(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)");
 
 	auto start = std::chrono::high_resolution_clock::now();
 
-	//auto b = D.absoluteFilePath("ja");
+
+#pragma omp parallel for num_threads(8)
+	for (int i = 0; i < 100000; i++)
+	{
+		auto b = simG::ThreadSafeRandom::randomSamples(testDir.entries, 5);
+
+	}
+
+
+
+	//simG::print(cache);
+	//simG::print(c);
+
+	//simG::Directory testDir(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)");
+	//for (int i = 0; i < v.size(); i++)
+	//{
+	////	std::cout << "Without Thread" << b[i] << "\n";
+	////	std::cout << "With    Thread" << v[i] << "\n";
+
+	//}
+
+	//simG::print(omp_get_num_procs());
+
+
+	//mGen.generateThreaded();
 	
+	//simG::Directory input_dir(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)");
+
+
+
+	//load_images(input_dir);
+	//auto b = D.absoluteFilePath("ja");
+
 	//cv::resize(img, img, cv::Size(1024, 576), 0, 0, cv::INTER_LINEAR);
 
 	//cv::imshow("Windows", img);
@@ -114,10 +238,6 @@ int main()
 	//	ImgaGenerator.generate();
 	//	ImgaGenerator.image_count;
 	//}
-
-
-
-
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
