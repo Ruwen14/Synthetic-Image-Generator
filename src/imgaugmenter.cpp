@@ -68,11 +68,11 @@ namespace simG
 			return img;
 		}
 		// get rotation matrix for rotating the image around its center in pixel coordinates
-		cv::Point2f image_center(img.cols / 2.0, img.rows / 2.0);
+		cv::Point2f image_center(static_cast<float>(img.cols / 2.0), static_cast<float>(img.rows / 2.0));
 		cv::Mat rotation_matrix = cv::getRotationMatrix2D(image_center, degree, 1.0);
 
 		// determine bounding rectangle
-		cv::Rect2f bbox = cv::RotatedRect(cv::Point2f(), img.size(), degree).boundingRect2f();
+		cv::Rect2f bbox = cv::RotatedRect(cv::Point2f(), img.size(), static_cast<float>(degree)).boundingRect2f();
 
 		// adjust transformation matrix
 		rotation_matrix.at<double>(0, 2) += bbox.width / 2.0 - img.cols / 2.0;

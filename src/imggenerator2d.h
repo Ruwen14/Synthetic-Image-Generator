@@ -43,7 +43,7 @@ namespace simG
 		{
 			bool do_random_flip = true;
 			// introduces the possibility that the image is not flipped --> random[no_flip, vertical...]
-			bool include_no_flip = true; 
+			bool include_no_flip = true;
 		};
 
 		struct BackgroundAugmentations
@@ -67,10 +67,17 @@ namespace simG
 		};
 	} // end of namespace internal_
 
+	enum class ThreadingStatus {
+		ADJUST_TO_CPU = 0, DISABLE_THREADING = 1, NUM_THREADS_2 = 2, 
+		NUM_THREADS_3 = 3, NUM_THREADS_4 = 4, NUM_THREADS_5 = 5,
+		NUM_THREADS_6 = 6, NUM_THREADS_7 = 7, NUM_THREADS_8 = 8
+	};
+
 	class ImageGenerator2D
 	{
 	public:
 		typedef internal_::ImageAugmentationOptions AugmentationParams;
+
 
 		ImageGenerator2D(
 			const std::string& maskDir,
@@ -91,14 +98,18 @@ namespace simG
 
 		~ImageGenerator2D() = default;
 
-		cv::Mat generate();
-		bool isValid() const;
+		
+		cv::Mat forward();
+		void forwardloop();
 		bool hasFinished() const;
+		void setThreading(ThreadingStatus tStatus);
 
-		std::stringstream error_log;
 		int image_count = 0;
 
+
 	private:
+		void runSequential_();
+		void runParallel_();
 		void augmentMask(cv::Mat& maskSample) const;
 		void augmentBackground(cv::Mat& backgrSample) const;
 		void compose(const cv::Mat& srcComp1, const cv::Mat& srcComp2, cv::Mat& dst) const;
@@ -109,6 +120,7 @@ namespace simG
 		bool valid_flag_ = true;
 		int target_images_;
 		int obj_per_image_;
+		int num_workers_ = 1;
 		AugmentationParams augparams_;
 		ImageAugmenter augmenter_;
 		AbstractAnnotator* annotator_;

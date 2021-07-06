@@ -2,6 +2,7 @@
 #include "utils/Random.h"
 #include <filesystem>
 #include <opencv2/highgui.hpp>
+#include <omp.h>
 
 namespace simG
 {
@@ -37,7 +38,9 @@ namespace simG
 	{
 	}
 
-	cv::Mat ImageGenerator2D::generate()
+
+	
+	cv::Mat ImageGenerator2D::forward()
 	{
 		cv::Mat bckgr_sample = cv::imread(BckgrndDir_.relativeFilePath(BckgrndDir_.cycleEntry()), cv::IMREAD_COLOR);
 		augmentBackground(bckgr_sample);
@@ -54,14 +57,57 @@ namespace simG
 		return bckgr_sample;
 	}
 
-	bool ImageGenerator2D::isValid() const
+	void ImageGenerator2D::forwardloop()
 	{
-		return this->valid_flag_;
+		if (this->num_workers_ > 1)
+		{
+			std::cout << "[INFO]: Running Loop with Multithreading[enabled::<" << this->num_workers_ << ">workers]" << "\n";
+			runSequential_();
+		}
+		else
+		{
+			std::cerr << "[INFO]: Running Loop with Multithreading[disabled]" << ". (Optional) enable it with <setThreading(...)>." << "\n";
+			runParallel_();
+		}
+
+		
 	}
+
 
 	bool ImageGenerator2D::hasFinished() const
 	{
 		return this->image_count == this->target_images_;
+	}
+
+	void ImageGenerator2D::setThreading(ThreadingStatus tStatus)
+	{
+		if (tStatus == ThreadingStatus::ADJUST_TO_CPU)
+		{
+			this->num_workers_ = omp_get_num_procs();
+		}
+		else
+		{
+			this->num_workers_ = static_cast<int>(tStatus);
+		}
+	}
+
+	void ImageGenerator2D::runSequential_()
+	{
+		while (!hasFinished())
+		{
+			cv::Mat composit = forward();
+		}
+
+	}
+
+	void ImageGenerator2D::runParallel_()
+	{
+		//list of entries = getResizedVec(Dir.entries)
+		//# omp parallel for 
+		//for (int i = 0; i < list of entries.size; i++)
+		//{
+
+		//}
 	}
 
 	void ImageGenerator2D::augmentMask(cv::Mat& maskSample) const
@@ -86,7 +132,7 @@ namespace simG
 		if (background_parms.axisflipping.do_random_flip)
 		{
 			this->augmenter_.randomFlip(
-				backgrSample, 
+				backgrSample,
 				background_parms.axisflipping.include_no_flip);
 		}
 
@@ -94,12 +140,11 @@ namespace simG
 		if (background_parms.brightness.do_shift)
 		{
 			this->augmenter_.randomBrightness(
-				backgrSample, 
+				backgrSample,
 				background_parms.brightness.brightness_range);
 		}
 
 		// Add rotation 180°
-
 	}
 
 	void ImageGenerator2D::compose(const cv::Mat& srcComp1, const cv::Mat& srcComp2, cv::Mat& dst) const

@@ -7,7 +7,7 @@ namespace simG
 {
 	enum class FlipMode { VERTICAL_FLIP = 0, HORIZONTAL_FLIP = 1, HORIZONTAL_AND_VERTICAL_FLIP = -1, NO_FLIP = 2 };
 	enum class RotationMode { ROTATE_90_CLCKWISE = 0, ROTATE_180 = 1, ROTATE_90_CNTRCLCKWISE = 2 };
-	enum class ResizeMode{ NEAREST = 0, LINEAR = 1, CUBIC = 2, AREA = 3, FASTEST = 4, AUTO = 5};
+	enum class ResizeMode { NEAREST = 0, LINEAR = 1, CUBIC = 2, AREA = 3, FASTEST = 4, AUTO = 5 };
 
 	struct Dimensions
 	{
