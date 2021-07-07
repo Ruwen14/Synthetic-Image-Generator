@@ -73,7 +73,7 @@ int main()
   generator.forwardloop();
   // generates a whole dataset according to numberImagesToGenerate
 ```
-- **Multithreading:** *add multiple worker-threads who read, process and save the data parallel for faster results.*
+- **Multithreading:** *add multiple worker-threads who read, process and save the data in parallel for faster results.*
 ```cpp
 generator.setThreading(simG::ThreadingStatus::NUM_THREADS_4);
 generator.forwardloop();
