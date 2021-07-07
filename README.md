@@ -74,16 +74,16 @@ int main() {
 #### Generate Images
 - single step 
 ```cpp
-generator.forward();
+  generator.forward();
 ```
 - run till finished
 ```cpp
- generator.forwardloop();
+  generator.forwardloop();
 ```
 - run with multi-threading enabled
 ```cpp
- generator.setThreading(simG::ThreadingStatus::NUM_THREADS_4);
- generator.forwardloop();
+generator.setThreading(simG::ThreadingStatus::NUM_THREADS_4);
+generator.forwardloop();
 ``` 
 
 # Results
