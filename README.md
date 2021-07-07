@@ -66,10 +66,12 @@ int main()
 - single step 
 ```cpp
   auto result_img = generator.forward();
+  // do custom stuff with yielded image
 ```
 - run till finished
 ```cpp
   generator.forwardloop();
+  // generates a whole dataset according to numberImagesToGenerate
 ```
 - run with multi-threading enabled
 ```cpp
