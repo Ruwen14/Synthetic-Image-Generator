@@ -1,12 +1,11 @@
-#include "imggenerator2d.h"
+#include "imggenerator.h"
 #include "utils/Random.h"
-#include <filesystem>
-#include <opencv2/highgui.hpp>
 #include <omp.h>
+
 
 namespace simG
 {
-	ImageGenerator2D::ImageGenerator2D(
+	ImageGenerator::ImageGenerator(
 		const std::string& maskDir,
 		const std::string& backgroundDir,
 		int numberImages,
@@ -27,20 +26,18 @@ namespace simG
 //
 	}
 
-	ImageGenerator2D::ImageGenerator2D(
+	ImageGenerator::ImageGenerator(
 		const std::string& maskDir,
 		const std::string& backgroundDir,
 		int numberImages,
 		int objectsPerImage,
 		const AugmentationParams& params
 	)
-		: ImageGenerator2D(maskDir, backgroundDir, numberImages, objectsPerImage, params, nullptr)
+		: ImageGenerator(maskDir, backgroundDir, numberImages, objectsPerImage, params, nullptr)
 	{
 	}
 
-
-	
-	cv::Mat ImageGenerator2D::forward()
+	cv::Mat ImageGenerator::forward()
 	{
 		cv::Mat bckgr_sample = cv::imread(BckgrndDir_.relativeFilePath(BckgrndDir_.cycleEntry()), cv::IMREAD_COLOR);
 		augmentBackground(bckgr_sample);
@@ -57,65 +54,66 @@ namespace simG
 		return bckgr_sample;
 	}
 
-	void ImageGenerator2D::forwardloop()
+	void ImageGenerator::forwardloop()
 	{
-		if (this->num_workers_ > 1)
+		cv::Mat img;
+#pragma omp parallel for num_threads(18)
+		for (int i = 0; i < 10000; i++)
 		{
-			std::cout << "[INFO]: Running Loop with Multithreading[enabled::<" << this->num_workers_ << ">workers]" << "\n";
-			runSequential_();
-		}
-		else
-		{
-			std::cerr << "[INFO]: Running Loop with Multithreading[disabled]" << ". (Optional) enable it with <setThreading(...)>." << "\n";
-			runParallel_();
-		}
+			std::cout << omp_get_thread_num() << "\n";
 
-		
+		}
 	}
 
-
-	bool ImageGenerator2D::hasFinished() const
+	bool ImageGenerator::hasFinished() const
 	{
 		return this->image_count == this->target_images_;
 	}
 
-	void ImageGenerator2D::setThreading(ThreadingStatus tStatus)
+	void ImageGenerator::setThreading(ThreadingStatus tStatus)
 	{
-		if (tStatus == ThreadingStatus::ADJUST_TO_CPU)
+		if (OPENMP_IS_AVAIL == 0 && tStatus != ThreadingStatus::DISABLE_THREADING)
 		{
-			this->num_workers_ = omp_get_num_procs();
+			std::string warningText =
+				"[WARNING]: Oops. It looks like you tried to enable threading, but forgot to set the '/openmp' flag during compilation. \n"
+				"	   >> Threading was therefore disabled for the rest of the program. \n"
+				"	   -- \n"
+				"	   If you still want to use threading add '-openmp' to your compilation commands or \n"
+				"	   select C/C++->Language, and change 'OpenMP Support' to 'Yes' if using Visual Studio 2019. \n"
+				"	   -- \n"
+				"	   Otherwise do 'setThreading(simG::ThreadingStatus::DISABLE_THREADING)' to disable the warning. \n";
+			std::cout << warningText << "\n";
+			this->thread_mode_ == ThreadingStatus::DISABLE_THREADING;
 		}
 		else
 		{
-			this->num_workers_ = static_cast<int>(tStatus);
+			thread_mode_ = tStatus;
 		}
 	}
 
-	void ImageGenerator2D::runSequential_()
+	void ImageGenerator::runSequential_()
 	{
 		while (!hasFinished())
 		{
 			cv::Mat composit = forward();
 		}
-
 	}
 
-	void ImageGenerator2D::runParallel_()
+	void ImageGenerator::runParallel_()
 	{
 		//list of entries = getResizedVec(Dir.entries)
-		//# omp parallel for 
+		//# omp parallel for
 		//for (int i = 0; i < list of entries.size; i++)
 		//{
-
 		//}
 	}
 
-	void ImageGenerator2D::augmentMask(cv::Mat& maskSample) const
+	void ImageGenerator::augmentMask(cv::Mat& maskSample) const
 	{
 		const auto& mask_params = this->augparams_.MaskAugs;
 	}
 
-	void ImageGenerator2D::augmentBackground(cv::Mat& backgrSample) const
+	void ImageGenerator::augmentBackground(cv::Mat& backgrSample) const
 	{
 		const auto& background_parms = this->augparams_.BackgroundAugs;
 
@@ -147,11 +145,12 @@ namespace simG
 		// Add rotation 180°
 	}
 
-	void ImageGenerator2D::compose(const cv::Mat& srcComp1, const cv::Mat& srcComp2, cv::Mat& dst) const
+	void ImageGenerator::compose(const cv::Mat& srcComp1, const cv::Mat& srcComp2, cv::Mat& dst) const
 	{
 	}
 
-	bool ImageGenerator2D::overlap() const
+	bool ImageGenerator::overlap() const
 	{
 	}
+
 }

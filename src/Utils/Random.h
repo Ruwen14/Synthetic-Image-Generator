@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <iterator>
-#include<random>
+#include <random>
 
 namespace simG {
 	// https://stackoverflow.com/questions/19036141/vary-range-of-uniform-int-distribution
@@ -61,11 +61,5 @@ namespace simG {
 			std::sample(vec.begin(), vec.end(), std::back_inserter(samples), number_samples, gen);
 			return samples;
 		}
-
-
 	};
-
-
-
-
 }

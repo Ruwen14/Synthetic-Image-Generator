@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <stdexcept>
+
 namespace simG
 {
 	// Base exception class

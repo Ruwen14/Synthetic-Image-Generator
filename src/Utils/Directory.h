@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <functional>
+
 namespace simG
 {
 	template<typename Arg>
@@ -47,5 +48,3 @@ namespace simG
 		int cycle_idx_ = -1; // used by nextEntry()
 	};
 }
-
-

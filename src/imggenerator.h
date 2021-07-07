@@ -2,12 +2,19 @@
 #include "imgaugmenter.h"
 #include "annotators/AbstractAnnotator.h"
 #include "utils/Directory.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
 #include <sstream>
-#include <opencv2/core/mat.hpp>
-#include "Exceptions.h"
+#include <opencv2/opencv.hpp>
+
+
+#ifdef _OPENMP
+#define OPENMP_IS_AVAIL 1
+#else
+#define OPENMP_IS_AVAIL 0
+#endif
 
 namespace simG
 {
@@ -68,18 +75,17 @@ namespace simG
 	} // end of namespace internal_
 
 	enum class ThreadingStatus {
-		ADJUST_TO_CPU = 0, DISABLE_THREADING = 1, NUM_THREADS_2 = 2, 
+		ADJUST_TO_CPU = 0, DISABLE_THREADING = 1, NUM_THREADS_2 = 2,
 		NUM_THREADS_3 = 3, NUM_THREADS_4 = 4, NUM_THREADS_5 = 5,
 		NUM_THREADS_6 = 6, NUM_THREADS_7 = 7, NUM_THREADS_8 = 8
 	};
 
-	class ImageGenerator2D
+	class ImageGenerator
 	{
 	public:
 		typedef internal_::ImageAugmentationOptions AugmentationParams;
 
-
-		ImageGenerator2D(
+		ImageGenerator(
 			const std::string& maskDir,
 			const std::string& backgroundDir,
 			int numberImages,
@@ -88,7 +94,7 @@ namespace simG
 			AbstractAnnotator* imageAnnotator
 		);
 
-		ImageGenerator2D(
+		ImageGenerator(
 			const std::string& maskDir,
 			const std::string& backgroundDir,
 			int numberImages,
@@ -96,16 +102,14 @@ namespace simG
 			const AugmentationParams& params
 		);
 
-		~ImageGenerator2D() = default;
+		~ImageGenerator() = default;
 
-		
 		cv::Mat forward();
 		void forwardloop();
 		bool hasFinished() const;
 		void setThreading(ThreadingStatus tStatus);
 
 		int image_count = 0;
-
 
 	private:
 		void runSequential_();
@@ -115,12 +119,14 @@ namespace simG
 		void compose(const cv::Mat& srcComp1, const cv::Mat& srcComp2, cv::Mat& dst) const;
 		bool overlap() const;
 
+
+
 		Directory MaskDir_;
 		Directory BckgrndDir_;
 		bool valid_flag_ = true;
 		int target_images_;
 		int obj_per_image_;
-		int num_workers_ = 1;
+		ThreadingStatus thread_mode_ = ThreadingStatus::DISABLE_THREADING;
 		AugmentationParams augparams_;
 		ImageAugmenter augmenter_;
 		AbstractAnnotator* annotator_;

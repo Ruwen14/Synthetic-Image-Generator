@@ -5,12 +5,11 @@
 #include <sstream>
 namespace simG
 {
-
 	std::ostream& operator<<(std::ostream& os, const simG::Directory& obj)
 	{
 		std::stringstream outstream;
 		outstream << "./" << obj.dirName() << "[" << "\n";
-		for (const auto & entry : obj.entries)
+		for (const auto& entry : obj.entries)
 		{
 			outstream << entry << ", " << "\n";
 		}
@@ -103,5 +102,3 @@ namespace simG
 		return file_entries;
 	}
 }
-
-

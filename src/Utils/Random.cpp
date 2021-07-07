@@ -1,6 +1,5 @@
 #include "Random.h"
-#include <iostream>
-#include <omp.h>
+
 namespace simG {
 	const unsigned int Random::seed{ std::random_device{}() };
 	std::mt19937 Random::MTEngine_{ seed };
@@ -20,7 +19,6 @@ namespace simG {
 		return uniformDouble(0, 1.0) < probability;
 	}
 
-	
 	int ThreadSafeRandom::uniformInt(int min, int max)
 	{
 		static thread_local auto seed = std::random_device{}();
@@ -37,19 +35,13 @@ namespace simG {
 		std::uniform_real_distribution<double> dist(min, max);
 
 		return dist(gen);
-
 	}
 
 	bool ThreadSafeRandom::randomProb(double probability)
 	{
 		return uniformDouble(0, 1.0) < probability;
 	}
-
 }
-
-
-
-
 
 // #ToDo thread local
 //#include <random>

@@ -1,8 +1,9 @@
 #include "imgaugmenter.h"
+#include "Utils/Random.h"
+
 #include <opencv2/imgproc.hpp>
 #include <opencv2/core.hpp>
 #include <iostream>
-#include "Utils/Random.h"
 
 namespace simG
 {
@@ -203,6 +204,7 @@ namespace simG
 
 		return dst;
 	}
+
 
 	Dimensions ImageAugmenter::calcPreservedAspectRatio(const Dimensions& srcDim, const Dimensions& targetDim) const
 	{
