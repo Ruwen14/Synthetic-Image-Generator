@@ -54,7 +54,6 @@ int main()
   // or 
   simG::YoloAnnotator annotator("path-to-annotationfile");
   // or ...
-  
   simG::ImageGenerator2D generator(maskDir, 
                                    backgroundDir, 
                                    numberImagesToGenerate, 
@@ -63,18 +62,10 @@ int main()
                                    &annotator); // ← pass annotator to generator
 ```
 
-```cpp
-int main() {
-  int y = SOME_MACRO_REFERENCE;
-  int x = 5 + 6;
-  cout << "Hello World! " << x << std::endl();
-  generator.forward();
-}
-```
 #### Generate Images
 - single step 
 ```cpp
-  generator.forward();
+  auto result_img = generator.forward();
 ```
 - run till finished
 ```cpp
@@ -87,3 +78,4 @@ generator.forwardloop();
 ``` 
 
 # Results
+
