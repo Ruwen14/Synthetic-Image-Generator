@@ -56,13 +56,20 @@ namespace simG
 
 	void ImageGenerator::forwardloop()
 	{
-		cv::Mat img;
-#pragma omp parallel for num_threads(18)
-		for (int i = 0; i < 10000; i++)
+		if (this->num_workers_ > 1)
 		{
-			std::cout << omp_get_thread_num() << "\n";
-
+			std::cout << "[INFO]: Running Loop with Multithreading[enabled::<" << this->num_workers_ << ">workers]" << "\n";
+			runParallel_();
 		}
+		else
+		{
+			std::cerr << "[INFO]: Running Loop with Multithreading[disabled]" << ". (Optional) enable it with <setThreading(...)>." << "\n";
+			runSequential_();
+		}
+
+
+
+
 	}
 
 	bool ImageGenerator::hasFinished() const
@@ -83,16 +90,22 @@ namespace simG
 				"	   -- \n"
 				"	   Otherwise do 'setThreading(simG::ThreadingStatus::DISABLE_THREADING)' to disable the warning. \n";
 			std::cout << warningText << "\n";
-			this->thread_mode_ == ThreadingStatus::DISABLE_THREADING;
+
+			this->num_workers_ == static_cast<int>(ThreadingStatus::DISABLE_THREADING);
+		}
+		else if (tStatus == ThreadingStatus::ADJUST_TO_CPU)
+		{
+			this->num_workers_ = omp_get_num_procs();
 		}
 		else
 		{
-			thread_mode_ = tStatus;
+			this->num_workers_ = static_cast<int>(tStatus);
 		}
 	}
 
 	void ImageGenerator::runSequential_()
 	{
+		return;
 		while (!hasFinished())
 		{
 			cv::Mat composit = forward();
@@ -101,6 +114,7 @@ namespace simG
 
 	void ImageGenerator::runParallel_()
 	{
+		return;
 		//list of entries = getResizedVec(Dir.entries)
 		//# omp parallel for
 		//for (int i = 0; i < list of entries.size; i++)

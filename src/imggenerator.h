@@ -111,7 +111,7 @@ namespace simG
 
 		int image_count = 0;
 
-	private:
+	public:
 		void runSequential_();
 		void runParallel_();
 		void augmentMask(cv::Mat& maskSample) const;
@@ -126,7 +126,7 @@ namespace simG
 		bool valid_flag_ = true;
 		int target_images_;
 		int obj_per_image_;
-		ThreadingStatus thread_mode_ = ThreadingStatus::DISABLE_THREADING;
+		int num_workers_ = static_cast<int>(ThreadingStatus::DISABLE_THREADING);
 		AugmentationParams augparams_;
 		ImageAugmenter augmenter_;
 		AbstractAnnotator* annotator_;

@@ -119,16 +119,14 @@ int main()
 	//params.MaskAugs.brightness.do_shift = true;
 	//params.MaskAugs.brightness.brightness_range = { -20.5, 20.5 };
 
+	
+
 	simG::ImageGenerator generator(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)",
 		R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test)", 500, 5, params);
-
-
 	//MultithreadGenerator mGen(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)");
 
 	auto start = std::chrono::high_resolution_clock::now();
-
-	simG::MultithreadGeneratorLMAO mGen(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)");
-	generator.setThreading(simG::ThreadingStatus::ADJUST_TO_CPU);
+	generator.setThreading(simG::ThreadingStatus::DISABLE_THREADING);
 	generator.forwardloop();
 	//mGen.generateThreaded();
 
