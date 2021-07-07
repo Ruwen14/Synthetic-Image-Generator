@@ -36,7 +36,7 @@ int main()
    params.MaskAugs.brightness.brightness_range = { -20.5, 20.5 };
    // ↑↑↑
 ```
-#### Add Generator
+#### Create Generator
 ```cpp
   simG::Directory maskDir("./transportation/car");
   simg::Directory backgroundDir("./backgrounds");
@@ -63,17 +63,17 @@ int main()
 ```
 
 #### Generate Images
-- single step 
+- **Single Step:**  *Advances the whole generator and yields one image. Recommended for debugging or custom purposes.*
 ```cpp
   auto result_img = generator.forward();
   // do custom stuff with yielded image
 ```
-- run till finished
+- **Create Dataset:** *Creates images in a loop and saves them according to arguments of genererator object.*
 ```cpp
   generator.forwardloop();
   // generates a whole dataset according to numberImagesToGenerate
 ```
-- run with multi-threading enabled
+- **Multithreading:** *add multiple worker-threads who read, process and save the data parallel for faster results.*
 ```cpp
 generator.setThreading(simG::ThreadingStatus::NUM_THREADS_4);
 generator.forwardloop();
