@@ -62,18 +62,28 @@ int main()
                                    params,
                                    &annotator); // ← pass annotator to generator
 ```
-#### Generate Images
+
 ```cpp
-  if(!generator.isValid())
-  {
-    exit(1);
-  }
-  
-  while(!generator.hasFinished())
-  {
-    generator.generate();
-  }
+int main() {
+  int y = SOME_MACRO_REFERENCE;
+  int x = 5 + 6;
+  cout << "Hello World! " << x << std::endl();
+  generator.forward();
 }
 ```
+#### Generate Images
+- single step 
+```cpp
+generator.forward();
+```
+- run till finished
+```cpp
+ generator.forwardloop();
+```
+- run with multi-threading enabled
+```cpp
+ generator.setThreading(simG::ThreadingStatus::NUM_THREADS_4);
+ generator.forwardloop();
+``` 
 
 # Results
