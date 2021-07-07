@@ -68,7 +68,7 @@ int main()
   auto result_img = generator.forward();
   // do custom stuff with yielded image
 ```
-- **Create Dataset:** *Creates images in a loop and saves them according to arguments of genererator object.*
+- **Create Dataset:** *Creates images in a loop and saves them according to the previous constructed arguments.*
 ```cpp
   generator.forwardloop();
   // generates a whole dataset according to numberImagesToGenerate
