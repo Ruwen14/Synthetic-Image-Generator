@@ -31,10 +31,9 @@
 *.out
 *.app
 
-*.vs
 x64/
+.vs
 *.filters
-*.sln
 *.user
 *.vcxproj
 *.json
