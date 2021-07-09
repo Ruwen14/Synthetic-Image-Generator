@@ -126,7 +126,7 @@ int main()
 	//MultithreadGenerator mGen(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)");
 
 	auto start = std::chrono::high_resolution_clock::now();
-	generator.setThreading(simG::ThreadingStatus::DISABLE_THREADING);
+	generator.setThreading(simG::ThreadingStatus::ADJUST_TO_CPU)
 	generator.forwardloop();
 	//mGen.generateThreaded();
 
@@ -136,6 +136,15 @@ int main()
 //	{
 //		std::cout << omp_get_thread_num() << "\n";
 //	}
+
+
+
+
+	
+
+
+
+
 
 
 
