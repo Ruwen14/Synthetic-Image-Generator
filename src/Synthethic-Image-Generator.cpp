@@ -98,7 +98,6 @@ using std::chrono::milliseconds;
 //}
 //
 
-
 int main()
 {
 	simG::ImageGenerator::AugmentationParams params;
