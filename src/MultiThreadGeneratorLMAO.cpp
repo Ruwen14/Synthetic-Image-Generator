@@ -1,13 +1,9 @@
 #include "MultiThreadGeneratorLMAO.h"
 
-
-
 namespace simG
 {
-
 	void MultithreadGeneratorLMAO::generate()
 	{
-
 	}
 
 	void MultithreadGeneratorLMAO::generateThreaded(int workers /*= omp_get_num_procs()*/)
@@ -17,8 +13,6 @@ namespace simG
 		for (int i = 0; i < 10000; i++)
 		{
 			std::cout << omp_get_thread_num() << "\n";
-
 		}
 	}
-
 }

@@ -9,7 +9,6 @@
 #include <sstream>
 #include <opencv2/opencv.hpp>
 
-
 #ifdef _OPENMP
 #define OPENMP_IS_AVAIL 1
 #else
@@ -72,6 +71,13 @@ namespace simG
 			BackgroundAugmentations BackgroundAugs;
 			MaskAugmentations MaskAugs;
 		};
+
+		class ImageGenerator_iterator
+		{
+		public:
+		protected:
+		private:
+		};
 	} // end of namespace internal_
 
 	enum class ThreadingStatus {
@@ -84,6 +90,7 @@ namespace simG
 	{
 	public:
 		typedef internal_::ImageAugmentationOptions AugmentationParams;
+		using iterator = internal_::ImageGenerator_iterator;
 
 		ImageGenerator(
 			const std::string& maskDir,
@@ -105,21 +112,19 @@ namespace simG
 		~ImageGenerator() = default;
 
 		cv::Mat forward();
-		void forwardloop();
+		void run();
 		bool hasFinished() const;
 		void setThreading(ThreadingStatus tStatus);
 
 		int image_count = 0;
 
-	public:
+	protected:
 		void runSequential_();
 		void runParallel_();
 		void augmentMask(cv::Mat& maskSample) const;
 		void augmentBackground(cv::Mat& backgrSample) const;
 		void compose(const cv::Mat& srcComp1, const cv::Mat& srcComp2, cv::Mat& dst) const;
 		bool overlap() const;
-
-
 
 		Directory MaskDir_;
 		Directory BckgrndDir_;
@@ -130,5 +135,9 @@ namespace simG
 		AugmentationParams augparams_;
 		ImageAugmenter augmenter_;
 		AbstractAnnotator* annotator_;
+
+	private:
+		void begin() const;
+		void end() const;
 	};
 }

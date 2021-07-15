@@ -15,7 +15,6 @@ using std::chrono::duration_cast;
 using std::chrono::duration;
 using std::chrono::milliseconds;
 
-
 //void load_images(simG::Directory dir)
 //{
 //	std::vector<cv::Mat>img_lst;
@@ -103,7 +102,6 @@ using std::chrono::milliseconds;
 int main()
 {
 	simG::ImageGenerator::AugmentationParams params;
-
 	// Defaults
 	//params.randomnoise = false;
 	//params.BackgroundAugs.axisflipping.do_random_flip = true;
@@ -119,36 +117,19 @@ int main()
 	//params.MaskAugs.brightness.do_shift = true;
 	//params.MaskAugs.brightness.brightness_range = { -20.5, 20.5 };
 
-	
-
 	simG::ImageGenerator generator(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)",
 		R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test)", 500, 5, params);
 	//MultithreadGenerator mGen(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)");
 
 	auto start = std::chrono::high_resolution_clock::now();
-	generator.setThreading(simG::ThreadingStatus::ADJUST_TO_CPU)
-	generator.forwardloop();
+	generator.setThreading(simG::ThreadingStatus::ADJUST_TO_CPU);
+
 	//mGen.generateThreaded();
 
+	//auto img = cv::imread("./resources/t_00000001.jpg");
 
-//#pragma omp parallel for
-//	for (int i = 0; i < 1000; i++)
-//	{
-//		std::cout << omp_get_thread_num() << "\n";
-//	}
-
-
-
-
-	
-
-
-
-
-
-
-
-
+	//cv::imshow("Wind", img);
+	//cv::waitKey(0);
 
 	//#pragma omp parallel for num_threads(4)
 	//	for (int i = 0; i < 1000; i++)
@@ -189,8 +170,6 @@ int main()
 		//	generator.generate();
 		//	//simG::print(ImgaGenerator.image_count);
 		//}
-
-	simG::ThreadSafeRandom::randomProb(40);
 
 	//try
 	//{

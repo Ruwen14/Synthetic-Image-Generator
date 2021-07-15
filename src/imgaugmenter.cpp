@@ -205,7 +205,6 @@ namespace simG
 		return dst;
 	}
 
-
 	Dimensions ImageAugmenter::calcPreservedAspectRatio(const Dimensions& srcDim, const Dimensions& targetDim) const
 	{
 		Dimensions new_dim;

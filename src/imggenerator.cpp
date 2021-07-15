@@ -2,7 +2,6 @@
 #include "utils/Random.h"
 #include <omp.h>
 
-
 namespace simG
 {
 	ImageGenerator::ImageGenerator(
@@ -54,7 +53,7 @@ namespace simG
 		return bckgr_sample;
 	}
 
-	void ImageGenerator::forwardloop()
+	void ImageGenerator::run()
 	{
 		if (this->num_workers_ > 1)
 		{
@@ -66,10 +65,6 @@ namespace simG
 			std::cerr << "[INFO]: Running Loop with Multithreading[disabled]" << ". (Optional) enable it with <setThreading(...)>." << "\n";
 			runSequential_();
 		}
-
-
-
-
 	}
 
 	bool ImageGenerator::hasFinished() const
@@ -167,4 +162,11 @@ namespace simG
 	{
 	}
 
+	void ImageGenerator::begin() const
+	{
+	}
+
+	void ImageGenerator::end() const
+	{
+	}
 }
