@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\foregroundextractor.cpp" />
     <ClCompile Include="src\imggenerator.cpp" />
     <ClCompile Include="src\MultiThreadGeneratorLMAO.cpp" />
     <ClCompile Include="src\annotators\CocoISAnnotator.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="src\annotators\YoloAnnotator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\foregroundextractor.h" />
     <ClInclude Include="src\imggenerator.h" />
     <ClInclude Include="src\MultiThreadGeneratorLMAO.h" />
     <ClInclude Include="src\utils\helpers.h" />
