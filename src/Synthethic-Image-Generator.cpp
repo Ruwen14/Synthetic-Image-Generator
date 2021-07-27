@@ -6,10 +6,12 @@
 #include "utils/Directory.h"
 #include "utils/helpers.h"
 #include "MultiThreadGeneratorLMAO.h"
+#include "transforms.h"
 
 #include <chrono>
 #include <opencv2/opencv.hpp>
 #include <omp.h>
+#include <variant>
 using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
@@ -98,9 +100,112 @@ using std::chrono::milliseconds;
 //}
 //
 
+//struct CropSettings
+//{
+//	int b;
+//};
+//
+//template<typename T>
+//struct Range
+//{
+//	T lower;
+//	T upper;
+//};
+//
+//struct Dimensions
+//{
+//	int width;
+//	int height;
+//};
+//
+//enum class Status { ENABLED, DISABLED };
+//enum class ApplyOn { TEMPLATE, BACKGROUND, TEMPLATE_AND_BACKGROUND };
+//class AugmentationConfig
+//{
+//public:
+//
+//	AugmentationConfig() = default;
+//	~AugmentationConfig() = default;
+//	void RandomCrop(Dimensions targetDim, bool keepAspectRatio);
+//	void RandomRotation(Range<int> degrees);
+//	void RandomHorizontalFlip(double chance = 0.5);
+//	void RandomVerticalFlip(double chance = 0.5);
+//	void RandomBrightnessShift(Range<double> range);
+//	void RandomColorJitter(double brightness, double hue);
+//	void RandomNoise(double mean = 0.0, double stdDev = 10.0);
+//	void RandomGaussianBlur(std::pair<int, int> kernelSize, std::pair<int, int> sigma);
+//
+//	void RandomApply(std::variant<int> transforms);
+//
+//	void Normalize();
+//
+//	//void RandomBrightnessBckgr(Range<double> shiftRange);
+//	//void RandomBrightnessMask(Range<double> shiftRange);
+//
+//	//void RandomAxisFlipMask(bool includeNoFlip = true);
+//	//void RandomAxisFlipBckgr(bool includeNoFlip = true);
+//
+//	void getConfigObject();
+//
+//	std::string dump();
+//};
+//
+//class AugRandomCrop
+//{
+//public:
+//	AugRandomCrop(int b) : b_(b) {}
+//	~AugRandomCrop() = default;
+//
+//	void operator()(const std::string& out);
+//
+//private:
+//	int b_;
+//};
+//
+//void AugRandomCrop::operator()(const std::string& out)
+//{
+//	std::cout << out << b_ << "\n";
+//}
+
 int main()
 {
+	//AugmentationConfig config_;
+	//config_.RandomRotation({ 0, 360 });
+	//config_.RandomCrop({ 1024, 576 }, true);
+	//config_.RandomNoise(0.0, 10.0);
+	//config_.RandomHorizontalFlip(0.5);
+	//config_.RandomVerticalFlip(0.5);
+	//config_.RandomBrightnessShift({ -20.5, 20.5 });
+
+	//simG::print(typeid(transList.transforms_[1]).name());
+	//std::vector<std::variant<int, simG::RandomBrightness>> conti{ simG::RandomBrightness({ -202.5, 20.5 }) };
+
+	//auto b = std::get<simG::RandomBrightness>(conti[0]);
+
+	//simG::print(b.beta_r_.lower);
+
+	//std::variant<int, simG::RandomBrightness> ty{ simG::RandomBrightness({ -202.5, 20.5 }) };
+	//auto b = std::get<simG::RandomBrightness>(ty);
+
+	//simG::print(b.beta_r_.lower);
+	//transforms_list tf{
+	//	simG::internal_::AxisFlippingOptions{true, true} ,
+	//	simG::internal_::RescaleOptions{true, { 1024,576 }, 0 }
+	//};
+
+	//for (const auto& transform : tf)
+	//{
+	//	std::cout << transform.index() << "\n";
+	//}
+	//
+	//
+	//
+
 	simG::ImageGenerator::AugmentationParams params;
+	//simG::TransformsList transforms{
+	//	AddTransform<simG::RandomBrightness>({-20.5, 20.5})
+	//};
+
 	// Defaults
 	//params.randomnoise = false;
 	//params.BackgroundAugs.axisflipping.do_random_flip = true;
@@ -120,15 +225,53 @@ int main()
 		R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test)", 500, 5, params);
 	//MultithreadGenerator mGen(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)");
 
+	auto test_img = cv::imread(R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\resources\t_00000001.jpg)");
+
 	auto start = std::chrono::high_resolution_clock::now();
-	generator.setThreading(simG::ThreadingStatus::ADJUST_TO_CPU);
+
+	simG::transforms::TransformsBucket transforms({
+		simG::transforms::RandomCrop({550, 100}, true),
+		simG::transforms::Resize({1024, 100}, true),
+		simG::transforms::RandomBrightness({-50, 50}),
+		simG::transforms::GaussianBlur(0.5),
+		simG::transforms::RandomGaussNoise(0.5),
+		simG::transforms::RandomVerticalFlip(0.5),
+		simG::transforms::RandomHorizontalFlip(0.5),
+		//simG::transforms::RandomRotation90(0.5),
+		//simG::transforms::RandomRotation180(0.5),
+		//simG::transforms::RandomRotation270(0.5),
+		//simG::transforms::RandomRotation({0, 360}),
+		});
+
+	//augmenter.rescale(test_img, { 600, 400 }, simG::ResizeMode::LINEAR, true);
+
+	//augmenter.rescale(test_img, { 600, 400 }, simG::ResizeMode::LINEAR, true);
+	//cv::imshow("Windows1", test_img);
+
+	std::vector<cv::Mat> img_array;
+	img_array.reserve(10);
+	for (size_t i = 0; i < 10; i++)
+	{
+		cv::Mat dst;
+		cv::Mat src; 
+		test_img.copyTo(src);
+		transforms.apply(src, dst);
+		img_array.push_back(dst);
+	}
+	simG::subplot(img_array, 4);
+	//transforms.apply(test_img, test_img);
+
+	//std::vector<cv::Mat> vec{ test_img, test_img, test_img,test_img, test_img, test_img, test_img, test_img, test_img };
+	//auto new_vec = simG::getResizedVec(vec, 26);
+	//simG::print(test_img.size());
+
+
+	//generator.setThreading(simG::ThreadingStatus::ADJUST_TO_CPU);
+	//auto dst = rbright(test_img);
 
 	//mGen.generateThreaded();
 
 	//auto img = cv::imread("./resources/t_00000001.jpg");
-
-	//cv::imshow("Wind", img);
-	//cv::waitKey(0);
 
 	//#pragma omp parallel for num_threads(4)
 	//	for (int i = 0; i < 1000; i++)
