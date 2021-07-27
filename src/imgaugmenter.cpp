@@ -56,7 +56,7 @@ namespace simG
 			break;
 		}
 
-		std::cout << dim.width << "\n" << dim.height << "\n";
+		//std::cout << dim.width << "\n" << dim.height << "\n";
 		cv::resize(img, img, cv::Size(dim.width, dim.height), 0, 0, res_mode);
 	}
 
