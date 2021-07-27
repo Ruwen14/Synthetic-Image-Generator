@@ -63,6 +63,7 @@ namespace simG
 		{
 			BrightnessOptions brightness;
 			RotationOptions rotation;
+			AxisFlippingOptions axisflipping;
 		};
 
 		struct ImageAugmentationOptions
