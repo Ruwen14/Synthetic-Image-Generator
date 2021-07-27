@@ -6,7 +6,7 @@ namespace simG
 	{
 		cv::Mat foreground;
 		//cv::grabCut()
-		return foreground
+		return foreground;
 	}
 
 	cv::Mat ForegroundExtractor::extractDNN(const cv::Mat& inputImg, const std::string& modelWeigths, const std::string& modelConfig, const std::string& categoryfilter)
@@ -18,5 +18,4 @@ namespace simG
 		cv::Rect outline;
 		return extract(inputImg, outline);
 	}
-
 }
