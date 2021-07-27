@@ -39,13 +39,13 @@
     <ClCompile Include="src\annotators\YoloAnnotator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\MultiThreadGeneratorLMAO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\imggenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\foregroundextractor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\transforms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,13 +80,13 @@
     <ClInclude Include="src\utils\helpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MultiThreadGeneratorLMAO.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\imggenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\foregroundextractor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\transforms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
