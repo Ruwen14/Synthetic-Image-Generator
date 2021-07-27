@@ -221,7 +221,7 @@ namespace simG
 
 		TransformsBucket::TransformsBucket(const std::vector<Transformers>& transformsList)
 		{
-			populateInternal(transformsList);
+			populate(transformsList);
 		}
 		
 		void TransformsBucket::apply(const cv::Mat& src, cv::Mat& dst) const
@@ -258,7 +258,7 @@ namespace simG
 			return out.str();
 		}
 
-		void TransformsBucket::populateInternal(const std::vector<Transformers>& transforms_list)
+		void TransformsBucket::populate(const std::vector<Transformers>& transforms_list)
 		{
 			for (const auto& curr_transform : transforms_list)
 			{

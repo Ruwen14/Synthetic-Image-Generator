@@ -263,7 +263,7 @@ namespace simG
 			std::string dump() const;
 
 		public:
-			void populateInternal(const std::vector<Transformers>& transforms_list);
+			void populate(const std::vector<Transformers>& transforms_list);
 
 			HoldTransforms transforms_;
 		};
