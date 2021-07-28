@@ -3,8 +3,6 @@
 #include <vector>
 #include <string>
 
-
-
 namespace simG
 {
 	template<typename T>
@@ -43,8 +41,6 @@ namespace simG
 
 		return dstVec;
 	}
-
-
 
 	/**
 	* @brief Shows composite image from the given images
@@ -105,8 +101,8 @@ namespace simG
 				x_end += resizeWidth[k] + edgeThickness;
 			}
 		}
-		std::string windowsTitle = 
-			"Subplot (" + std::to_string(nRows) + ", " 
+		std::string windowsTitle =
+			"Subplot (" + std::to_string(nRows) + ", "
 			+ std::to_string(imagesPerRow) + ")";
 		cv::imshow(windowsTitle, canvasImage);
 		cv::waitKey(0);

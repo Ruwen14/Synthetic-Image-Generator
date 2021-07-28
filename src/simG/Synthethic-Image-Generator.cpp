@@ -1,16 +1,10 @@
 // Synthethic-Image-Generator.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-#include "imggenerator.h"
-#include <iostream>
-#include "utils/Random.h"
-#include "utils/Directory.h"
-#include "utils/helpers.h"
-#include "MultiThreadGeneratorLMAO.h"
-#include "transforms.h"
 
+#include "../simG.h"
+
+#include <iostream>
 #include <chrono>
-#include <opencv2/opencv.hpp>
-#include <omp.h>
 #include <variant>
 using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
@@ -167,6 +161,18 @@ using std::chrono::milliseconds;
 //	std::cout << out << b_ << "\n";
 //}
 
+cv::Mat randomScale(cv::Mat img, simG::transforms::Range<double> limits = { 0.9, 1.1 })
+{
+	double scale = simG::Random::uniformDouble(limits.lower, limits.upper);
+	auto img_size = img.size();
+
+	auto new_width = static_cast<int>(static_cast<double>(img_size.width * scale));
+	auto new_height = static_cast<int>(static_cast<double>(img_size.height * scale));
+
+	cv::resize(img, img, cv::Size(new_width, new_height));
+	return img;
+}
+
 int main()
 {
 	//AugmentationConfig config_;
@@ -176,30 +182,6 @@ int main()
 	//config_.RandomHorizontalFlip(0.5);
 	//config_.RandomVerticalFlip(0.5);
 	//config_.RandomBrightnessShift({ -20.5, 20.5 });
-
-	//simG::print(typeid(transList.transforms_[1]).name());
-	//std::vector<std::variant<int, simG::RandomBrightness>> conti{ simG::RandomBrightness({ -202.5, 20.5 }) };
-
-	//auto b = std::get<simG::RandomBrightness>(conti[0]);
-
-	//simG::print(b.beta_r_.lower);
-
-	//std::variant<int, simG::RandomBrightness> ty{ simG::RandomBrightness({ -202.5, 20.5 }) };
-	//auto b = std::get<simG::RandomBrightness>(ty);
-
-	//simG::print(b.beta_r_.lower);
-	//transforms_list tf{
-	//	simG::internal_::AxisFlippingOptions{true, true} ,
-	//	simG::internal_::RescaleOptions{true, { 1024,576 }, 0 }
-	//};
-
-	//for (const auto& transform : tf)
-	//{
-	//	std::cout << transform.index() << "\n";
-	//}
-	//
-	//
-	//
 
 	simG::ImageGenerator::AugmentationParams params;
 	//simG::TransformsList transforms{
@@ -226,45 +208,49 @@ int main()
 	//MultithreadGenerator mGen(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)");
 
 	auto test_img = cv::imread(R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\resources\t_00000001.jpg)");
+	
 
+	simG::ImageAugmenter augmenter;
 	auto start = std::chrono::high_resolution_clock::now();
 
-	simG::transforms::TransformsBucket transforms({
-		simG::transforms::RandomCrop({550, 100}, true),
-		simG::transforms::Resize({1024, 100}, true),
-		simG::transforms::RandomBrightness({-50, 50}),
-		simG::transforms::GaussianBlur(0.5),
-		simG::transforms::RandomGaussNoise(0.5),
-		simG::transforms::RandomVerticalFlip(0.5),
-		simG::transforms::RandomHorizontalFlip(0.5),
+	simG::transforms::Sequential transforms({
+		simG::transforms::RandomScale({0.5, 1.5})
+		//simG::transforms::RandomCrop({550, 100}, true),
+		//simG::transforms::Resize({600, 400}, true),
+		//simG::transforms::RandomBrightness({-50, 50}),
+		//simG::transforms::GaussianBlur(0.5),
+		//simG::transforms::RandomGaussNoise(0.5),
+		//simG::transforms::RandomVerticalFlip(0.5),
+		//simG::transforms::RandomHorizontalFlip(0.5),
+		// put annotator as transform like in https://github.com/LinkedAi/flip
+		//TODO: add ZoomFactor or RandomResize
+
 		//simG::transforms::RandomRotation90(0.5),
 		//simG::transforms::RandomRotation180(0.5),
 		//simG::transforms::RandomRotation270(0.5),
 		//simG::transforms::RandomRotation({0, 360}),
 		});
 
-	//augmenter.rescale(test_img, { 600, 400 }, simG::ResizeMode::LINEAR, true);
 
-	//augmenter.rescale(test_img, { 600, 400 }, simG::ResizeMode::LINEAR, true);
-	//cv::imshow("Windows1", test_img);
+
+	//simG::Directory dir(R"(C:\Users\ruwen\Desktop\iav_Werkstudent\Dataset\Datasat_keep_aspect\train\images)");
 
 	std::vector<cv::Mat> img_array;
 	img_array.reserve(10);
-	for (size_t i = 0; i < 10; i++)
+//
+////#pragma omp parallel for num_threads(4)
+	for (int i = 0; i < 10; i++)
 	{
+		//std::cout << omp_get_thread_num() << "\n";
 		cv::Mat dst;
-		cv::Mat src; 
+		cv::Mat src;
 		test_img.copyTo(src);
 		transforms.apply(src, dst);
+
+		simG::print(dst.size());
 		img_array.push_back(dst);
 	}
 	simG::subplot(img_array, 4);
-	//transforms.apply(test_img, test_img);
-
-	//std::vector<cv::Mat> vec{ test_img, test_img, test_img,test_img, test_img, test_img, test_img, test_img, test_img };
-	//auto new_vec = simG::getResizedVec(vec, 26);
-	//simG::print(test_img.size());
-
 
 	//generator.setThreading(simG::ThreadingStatus::ADJUST_TO_CPU);
 	//auto dst = rbright(test_img);

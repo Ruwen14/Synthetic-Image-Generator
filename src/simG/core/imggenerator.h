@@ -1,7 +1,7 @@
 #pragma once
 #include "imgaugmenter.h"
-#include "annotators/AbstractAnnotator.h"
-#include "utils/Directory.h"
+#include "../annotator/AbstractAnnotator.h"
+#include "../utils/Directory.h"
 
 #include <iostream>
 #include <string>
@@ -112,8 +112,8 @@ namespace simG
 
 		~ImageGenerator() = default;
 
-		cv::Mat forward();
-		void run();
+		cv::Mat forward(); // return struct of image and annotation (string representation) auto [img, anno]
+		void generate(); //Rename to apply(dir, dir, outdir)
 		bool hasFinished() const;
 		void setThreading(ThreadingStatus tStatus);
 

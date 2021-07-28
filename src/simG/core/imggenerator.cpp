@@ -1,5 +1,5 @@
 #include "imggenerator.h"
-#include "utils/Random.h"
+#include "../utils/Random.h"
 #include <omp.h>
 
 namespace simG
@@ -53,7 +53,7 @@ namespace simG
 		return bckgr_sample;
 	}
 
-	void ImageGenerator::run()
+	void ImageGenerator::generate()
 	{
 		if (this->num_workers_ > 1)
 		{

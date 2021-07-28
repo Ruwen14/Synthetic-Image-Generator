@@ -154,34 +154,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\foregroundextractor.cpp" />
-    <ClCompile Include="src\imggenerator.cpp" />
-    <ClCompile Include="src\annotators\CocoISAnnotator.cpp" />
-    <ClCompile Include="src\annotators\AbstractAnnotator.cpp" />
-    <ClCompile Include="src\utils\Directory.cpp" />
-    <ClCompile Include="src\imgaugmenter.cpp" />
-    <ClCompile Include="src\annotator.cpp" />
-    <ClCompile Include="src\utils\Random.cpp" />
-    <ClCompile Include="src\Synthethic-Image-Generator.cpp">
+    <ClCompile Include="src\simG\utils\foregroundextractor.cpp" />
+    <ClCompile Include="src\simG\core\imggenerator.cpp" />
+    <ClCompile Include="src\simG\annotator\CocoISAnnotator.cpp" />
+    <ClCompile Include="src\simG\annotator\AbstractAnnotator.cpp" />
+    <ClCompile Include="src\simG\utils\Directory.cpp" />
+    <ClCompile Include="src\simG\core\imgaugmenter.cpp" />
+    <ClCompile Include="src\simG\annotator\annotator.cpp" />
+    <ClCompile Include="src\simG\utils\Random.cpp" />
+    <ClCompile Include="src\simG\Synthethic-Image-Generator.cpp">
       <OpenMPSupport Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</OpenMPSupport>
     </ClCompile>
-    <ClCompile Include="src\annotators\YoloAnnotator.cpp" />
-    <ClCompile Include="src\transforms.cpp" />
+    <ClCompile Include="src\simG\annotator\YoloAnnotator.cpp" />
+    <ClCompile Include="src\simG\core\transforms.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\foregroundextractor.h" />
-    <ClInclude Include="src\imggenerator.h" />
-    <ClInclude Include="src\utils\helpers.h" />
-    <ClInclude Include="src\annotators\CocoISAnnotator.h" />
-    <ClInclude Include="src\annotators\AbstractAnnotator.h" />
-    <ClInclude Include="src\Exceptions.h" />
+    <ClInclude Include="src\simG.h" />
+    <ClInclude Include="src\simG\core\types.h" />
+    <ClInclude Include="src\simG\utils\foregroundextractor.h" />
+    <ClInclude Include="src\simG\core\imggenerator.h" />
+    <ClInclude Include="src\simG\utils\helpers.h" />
+    <ClInclude Include="src\simG\annotator\CocoISAnnotator.h" />
+    <ClInclude Include="src\simG\annotator\AbstractAnnotator.h" />
+    <ClInclude Include="src\simG\core\Exceptions.h" />
     <ClInclude Include="include\simg.h" />
-    <ClInclude Include="src\utils\Directory.h" />
-    <ClInclude Include="src\imgaugmenter.h" />
-    <ClInclude Include="src\annotator.h" />
-    <ClInclude Include="src\utils\Random.h" />
-    <ClInclude Include="src\annotators\YoloAnnotator.h" />
-    <ClInclude Include="src\transforms.h" />
+    <ClInclude Include="src\simG\utils\Directory.h" />
+    <ClInclude Include="src\simG\core\imgaugmenter.h" />
+    <ClInclude Include="src\simG\annotator\annotator.h" />
+    <ClInclude Include="src\simG\utils\Random.h" />
+    <ClInclude Include="src\simG\annotator\YoloAnnotator.h" />
+    <ClInclude Include="src\simG\core\transforms.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

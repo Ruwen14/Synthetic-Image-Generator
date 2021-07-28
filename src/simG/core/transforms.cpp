@@ -1,5 +1,5 @@
 #include "transforms.h"
-#include "Utils/Random.h"
+#include "../utils/Random.h"
 #include <sstream>
 
 namespace simG
@@ -177,6 +177,21 @@ namespace simG
 			return new_dim;
 		}
 
+		cv::Mat RandomScale::operator()(cv::Mat& srcSample) const
+		{
+			double scale = Random::uniformDouble(scale_limits_.lower, scale_limits_.upper);
+			auto img_size = srcSample.size();
+
+			auto new_width = static_cast<int>(static_cast<double>(img_size.width * scale));
+			auto new_height = static_cast<int>(static_cast<double>(img_size.height * scale));
+
+			//std::cout << cv::Size(new_width, new_height) << "\n";
+
+			cv::resize(srcSample, srcSample, cv::Size(new_width, new_height));
+
+			return srcSample;
+		}
+
 		cv::Mat RandomBrightness::operator()(cv::Mat& srcSample) const
 		{
 			double beta = Random::uniformDouble(beta_r_.lower, beta_r_.upper);
@@ -219,12 +234,12 @@ namespace simG
 			return srcSample;
 		}
 
-		TransformsBucket::TransformsBucket(const std::vector<Transformers>& transformsList)
+		Sequential::Sequential(const std::vector<Transformers>& transformsList)
 		{
 			populate(transformsList);
 		}
-		
-		void TransformsBucket::apply(const cv::Mat& src, cv::Mat& dst) const
+
+		void Sequential::apply(const cv::Mat& src, cv::Mat& dst) const
 		{
 			dst = src;
 			for (const auto& transformation : transforms_)
@@ -233,17 +248,17 @@ namespace simG
 			}
 		}
 
-		void TransformsBucket::operator()(const cv::Mat& src, cv::Mat& dst) const
+		void Sequential::operator()(const cv::Mat& src, cv::Mat& dst) const
 		{
 			apply(src, dst);
 		}
 
-		int TransformsBucket::count() const
+		int Sequential::count() const
 		{
 			return transforms_.size();
 		}
 
-		std::string TransformsBucket::dump() const
+		std::string Sequential::dump() const
 		{
 			std::stringstream out;
 			out << typeid(*this).name() << " {\n";
@@ -258,7 +273,7 @@ namespace simG
 			return out.str();
 		}
 
-		void TransformsBucket::populate(const std::vector<Transformers>& transforms_list)
+		void Sequential::populate(const std::vector<Transformers>& transforms_list)
 		{
 			for (const auto& curr_transform : transforms_list)
 			{
@@ -308,15 +323,20 @@ namespace simG
 					break;
 				case 8:
 					transforms_.push_back(
-						std::make_unique<RandomBrightness>(std::get<RandomBrightness>(curr_transform))
+						std::make_unique<RandomScale>(std::get<RandomScale>(curr_transform))
 					);
 					break;
 				case 9:
 					transforms_.push_back(
-						std::make_unique<RandomGaussNoise>(std::get<RandomGaussNoise>(curr_transform))
+						std::make_unique<RandomBrightness>(std::get<RandomBrightness>(curr_transform))
 					);
 					break;
 				case 10:
+					transforms_.push_back(
+						std::make_unique<RandomGaussNoise>(std::get<RandomGaussNoise>(curr_transform))
+					);
+					break;
+				case 11:
 					transforms_.push_back(
 						std::make_unique<GaussianBlur>(std::get<GaussianBlur>(curr_transform))
 					);

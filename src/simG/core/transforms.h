@@ -6,12 +6,6 @@ namespace simG
 {
 	namespace transforms
 	{
-		enum class TransformerType {
-			TYPE_TRANSFORMATION, TYPE_RANDOM_ROTATION, TYPE_RANDOM_ROTATION90, TYPE_RANDOM_ROTATION180, TYPE_RANDOM_ROTATION270,
-			TYPE_RANDOM_HORIZONTAL_FLIP, TYPE_RANDOM_VERTICAL_FLIP, TYPE_RANDOM_CROP, TYPE_RESIZE, TYPE_RANDOM_TRANSLATION,
-			TYPE_RANDOM_BRIGHTNESS, TYPE_RANDOM_GAUSS_NOISE, TYPE_GAUSS_BLUR
-		};
-
 		template<typename T>
 		struct Range
 		{
@@ -44,7 +38,6 @@ namespace simG
 		{
 		public:
 			RandomRotation(Range<int> range) : rotation_range_(range) {};
-			virtual ~RandomRotation() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
 
@@ -59,7 +52,6 @@ namespace simG
 		{
 		public:
 			RandomRotation90(double chance) : chance_(chance) {};
-			virtual ~RandomRotation90() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
 
@@ -74,7 +66,6 @@ namespace simG
 		{
 		public:
 			RandomRotation180(double chance) : chance_(chance) {};
-			virtual ~RandomRotation180() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
 
@@ -89,7 +80,6 @@ namespace simG
 		{
 		public:
 			RandomRotation270(double chance) : chance_(chance) {};
-			virtual ~RandomRotation270() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
 
@@ -104,7 +94,7 @@ namespace simG
 		{
 		public:
 			RandomHorizontalFlip(double chance) : chance_(chance) {};
-			virtual ~RandomHorizontalFlip() = default;
+			//virtual ~RandomHorizontalFlip() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
 
@@ -119,7 +109,7 @@ namespace simG
 		{
 		public:
 			RandomVerticalFlip(double chance) : chance_(chance) {};
-			virtual ~RandomVerticalFlip() = default;
+			//virtual ~RandomVerticalFlip() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
 
@@ -127,7 +117,7 @@ namespace simG
 			double chance_;
 		};
 
-		/** @brief Crop the given image at a random location. 
+		/** @brief Crop the given image at a random location.
 		*@param targetDim (Dimensions): dimensions of the crop.
 		*@param keepAspectRatio (bool): whether to keep the aspect ratio when cropping.
 		*/
@@ -136,7 +126,7 @@ namespace simG
 		public:
 			RandomCrop(Dimensions targetDim, bool keepAspectRatio) :
 				crop_dim_(targetDim), keep_aspect_(keepAspectRatio) {};
-			virtual ~RandomCrop() = default;
+			//virtual ~RandomCrop() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
 
@@ -156,7 +146,7 @@ namespace simG
 		public:
 			Resize(Dimensions dim, bool keepAspectRatio) :
 				dim_(dim), keep_aspect_(keepAspectRatio) {};
-			virtual ~Resize() = default;
+			//virtual ~Resize() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
 
@@ -171,16 +161,29 @@ namespace simG
 		{
 		};
 
+		class RandomScale : public Transformation
+		{
+		public:
+			RandomScale(Range<double> scaleLimits) 
+				: scale_limits_(scaleLimits) {};
+			//virtual ~RandomScale() = default;
+
+			cv::Mat operator() (cv::Mat& srcSample) const override;
+
+		private:
+			Range<double> scale_limits_;
+		};
+
 		/** @brief Randomly change brightness of the input image.
 		*@param betaRange:  brightness factor is chosen randomly between range(double min, double max).
-		*@param alpha: alpha factor. Default = 1. 
+		*@param alpha: alpha factor. Default = 1.
 		*/
 		class RandomBrightness : public Transformation
 		{
 		public:
 			RandomBrightness(Range<double> betaRange, double alpha = 1)
 				: beta_r_(betaRange), alpha_(alpha) {}
-			virtual ~RandomBrightness() = default;
+			//virtual ~RandomBrightness() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
 
@@ -199,7 +202,7 @@ namespace simG
 		public:
 			RandomGaussNoise(double chance, double mean = 0.0, double stdDev = 10.0)
 				: chance_(chance), mean_(mean), standard_dev_(stdDev) {}
-			virtual ~RandomGaussNoise() = default;
+			//virtual ~RandomGaussNoise() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
 
@@ -218,7 +221,7 @@ namespace simG
 		public:
 			GaussianBlur(double chance, cv::Size kSize = { 3,3 })
 				: chance_(chance), kernelsize_(kSize) {}
-			virtual ~GaussianBlur() = default;
+			//virtual ~GaussianBlur() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
 
@@ -227,23 +230,23 @@ namespace simG
 			cv::Size kernelsize_;
 		};
 
-		/** @brief A sequential container that holds transforms (see simG::transforms in transforms.h). 
+		/** @brief A sequential container that holds transforms (see simG::transforms in transforms.h).
 		 * Transforms are added in the order in which they are passed in the constructor.
 		 * The ``apply()`` method is used to apply selected transforms to an input sample.
 		 * @param transformsList: vector of transformers  listed in transforms.h (accessible via simG::transforms::).
 		 */
-		class TransformsBucket
+		class Sequential
 		{
 		public:
 			using Transformers = std::variant<
 				RandomRotation, RandomRotation90, RandomRotation180, RandomRotation270, RandomHorizontalFlip,
-				RandomVerticalFlip, RandomCrop, Resize, RandomBrightness, RandomGaussNoise, GaussianBlur>;
+				RandomVerticalFlip, RandomCrop, Resize, RandomScale, RandomBrightness, RandomGaussNoise, GaussianBlur>;
 
 			using HoldTransforms = std::vector<std::unique_ptr<Transformation>>;
 
-			TransformsBucket(const std::vector<Transformers>& transformsList);
-			TransformsBucket(const TransformsBucket&) = delete;
-			~TransformsBucket() = default;
+			Sequential(const std::vector<Transformers>& transformsList);
+			Sequential(const Sequential&) = delete;
+			~Sequential() = default;
 			/** @brief Applies selected transformations to an input sample.
 			@param src: input matrix. @param dst: destination matrix that reflects transformations.
 			*/
