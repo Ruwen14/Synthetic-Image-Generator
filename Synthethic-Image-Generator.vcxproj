@@ -185,6 +185,15 @@
     <ClInclude Include="src\simG\annotator\YoloAnnotator.h" />
     <ClInclude Include="src\simG\core\transforms.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\Downloads\commands.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Downloads\00.weights" />
+    <None Include="..\..\..\Downloads\01.weights" />
+    <None Include="..\..\..\Downloads\02.weights" />
+    <None Include="..\..\..\Downloads\yolov3-openimages.weights" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

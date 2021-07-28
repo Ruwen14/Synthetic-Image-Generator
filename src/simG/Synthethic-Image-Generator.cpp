@@ -173,8 +173,19 @@ cv::Mat randomScale(cv::Mat img, simG::transforms::Range<double> limits = { 0.9,
 	return img;
 }
 
+
+bool callTerminal()
+{
+	
+	auto response = system("cd /D C:\\Users\\ruwen\Desktop\\iav_Werkstudent\\yolact_IAV\\testing");
+	simG::print(response);
+
+	return response;
+}
+
 int main()
 {
+	system("cd && cd resources/weights && cd");
 	//AugmentationConfig config_;
 	//config_.RandomRotation({ 0, 360 });
 	//config_.RandomCrop({ 1024, 576 }, true);
@@ -214,7 +225,7 @@ int main()
 	auto start = std::chrono::high_resolution_clock::now();
 
 	simG::transforms::Sequential transforms({
-		simG::transforms::RandomScale({0.5, 1.5})
+		//simG::transforms::RandomScale({0.5, 1.5}),
 		//simG::transforms::RandomCrop({550, 100}, true),
 		//simG::transforms::Resize({600, 400}, true),
 		//simG::transforms::RandomBrightness({-50, 50}),
@@ -223,34 +234,34 @@ int main()
 		//simG::transforms::RandomVerticalFlip(0.5),
 		//simG::transforms::RandomHorizontalFlip(0.5),
 		// put annotator as transform like in https://github.com/LinkedAi/flip
-		//TODO: add ZoomFactor or RandomResize
 
-		//simG::transforms::RandomRotation90(0.5),
+		//simG::transforms::RandomRotation90(1),
 		//simG::transforms::RandomRotation180(0.5),
-		//simG::transforms::RandomRotation270(0.5),
-		//simG::transforms::RandomRotation({0, 360}),
+		//simG::transforms::RandomRotation270(1.0),
+		simG::transforms::RandomRotation({60,60}),
 		});
 
-
+	//cv::Mat dst;
+	//transforms.apply(test_img, dst);
+	//cv::imshow("", dst);
+	//cv::waitKey(0);t
 
 	//simG::Directory dir(R"(C:\Users\ruwen\Desktop\iav_Werkstudent\Dataset\Datasat_keep_aspect\train\images)");
 
-	std::vector<cv::Mat> img_array;
-	img_array.reserve(10);
-//
-////#pragma omp parallel for num_threads(4)
-	for (int i = 0; i < 10; i++)
-	{
-		//std::cout << omp_get_thread_num() << "\n";
-		cv::Mat dst;
-		cv::Mat src;
-		test_img.copyTo(src);
-		transforms.apply(src, dst);
-
-		simG::print(dst.size());
-		img_array.push_back(dst);
-	}
-	simG::subplot(img_array, 4);
+//	std::vector<cv::Mat> img_array;
+//	img_array.reserve(10);
+////
+//////#pragma omp parallel for num_threads(4)
+//	for (int i = 0; i < 1; i++)
+//	{
+//		//std::cout << omp_get_thread_num() << "\n";
+//		cv::Mat dst;
+//		cv::Mat src;
+//		test_img.copyTo(src);
+//		transforms.apply(src, dst);
+//		img_array.push_back(dst);
+//	}
+	//simG::subplot(img_array, 4);
 
 	//generator.setThreading(simG::ThreadingStatus::ADJUST_TO_CPU);
 	//auto dst = rbright(test_img);
