@@ -1,4 +1,4 @@
-# Synthetic-Image-Generator
+# simG (Synthetic Image Generation)
  ImageGenerator C++
 
 # Requirements
