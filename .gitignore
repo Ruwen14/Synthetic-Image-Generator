@@ -33,5 +33,5 @@
 
 x64/
 .vs
-
+*.weights
 *.json
