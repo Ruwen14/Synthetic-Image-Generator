@@ -2,14 +2,25 @@
 //
 
 #include "../simG.h"
+#include "utils/Timer.h"
+#include "core/algorithms.h"
 
 #include <iostream>
 #include <chrono>
 #include <variant>
+
 using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 using std::chrono::milliseconds;
+
+//#ifndef SIMG_EXPORT
+//# if (defined _WIN32 || defined WINCE || defined __CYGWIN__)
+//#   define SIMG_EXPORT __declspec(dllexport)
+//# elif defined __GNUC__ && __GNUC__ >= 4 && (defined(CVAPI_EXPORTS) || defined(__APPLE__))
+//#   define SIMG_EXPORT __attribute__ ((visibility ("default")))
+//# endif
+//#endif
 
 //void load_images(simG::Directory dir)
 //{
@@ -161,39 +172,249 @@ using std::chrono::milliseconds;
 //	std::cout << out << b_ << "\n";
 //}
 
-cv::Mat randomScale(cv::Mat img, simG::transforms::Range<double> limits = { 0.9, 1.1 })
+cv::Mat overlay(const cv::Mat& mask, const cv::Mat& back)
 {
-	double scale = simG::Random::uniformDouble(limits.lower, limits.upper);
-	auto img_size = img.size();
+	cv::Mat dst;
+	cv::addWeighted(back, 0.4, mask, 0.1, 0, dst);
 
-	auto new_width = static_cast<int>(static_cast<double>(img_size.width * scale));
-	auto new_height = static_cast<int>(static_cast<double>(img_size.height * scale));
+	return dst;
+}
 
-	cv::resize(img, img, cv::Size(new_width, new_height));
-	return img;
+/**
+ * @brief Draws a transparent image over a frame Mat.
+ *
+ * @param frame the frame where the transparent image will be drawn
+ * @param transp the Mat image with transparency, read from a PNG image, with the IMREAD_UNCHANGED flag
+ * @param xPos x position of the frame image where the image will start.
+ * @param yPos y position of the frame image where the image will start.
+ */
+void drawTransparency(cv::Mat frame, cv::Mat transp, int xPos, int yPos) {
+	cv::Mat mask;
+	std::vector<cv::Mat> layers;
+
+	cv::split(transp, layers); // seperate channels
+	cv::Mat rgb[3] = { layers[0],layers[1],layers[2] };
+	mask = layers[3]; // png's alpha channel used as mask
+	cv::merge(rgb, 3, transp);  // put together the RGB channels, now transp insn't transparent
+	transp.copyTo(frame.rowRange(yPos, yPos + transp.rows).colRange(xPos, xPos + transp.cols), mask);
+}
+
+void test()
+{/*create two input arrays: matrices*/
+	/*also populate matrices with zeros*/
+	cv::Mat input1 = cv::Mat::zeros(cv::Size(400, 400), CV_8UC3);
+	cv::Mat input2 = cv::Mat::zeros(cv::Size(400, 400), CV_8UC3);
+
+	/*draw a circle on input1*/
+	cv::circle(input1, cv::Point(200, 200), 100.0, cv::Scalar(0, 0, 255), 1, 8);
+
+	/*display input1*/
+	imshow("input1", input1);
+
+	/*draw a circle on input2*/
+	cv::circle(input2, cv::Point(150, 200), 100.0, cv::Scalar(255, 0, 0), 1, 8);
+
+	/*display input2*/
+	imshow("input2", input2);
+
+	/*stores the output*/
+	cv::Mat output;
+
+	/*compute the bitwise and of input arrays*/
+	/*and store them in output array*/
+	bitwise_and(input1, input2, output);
+
+	/*display the output*/
+	imshow("bitwise_and", output);
+
+	/*wait for the use to press any */
+	/*key to exit frames*/
+	cv::waitKey(0);
+
+	/*return 0 to caller to indicate*/
+	/*successful termination of program*/
+}
+
+void overlayImage(cv::Mat& background, const cv::Mat& mask, cv::Point2i location)
+{
+	//background.copyTo(output);
+
+	auto mask_channels = mask.channels();
+	auto background_channels = background.channels();
+
+	// start at the row indicated by location, or at row 0 if location.y is negative.
+	for (int y = std::max(location.y, 0); y < background.rows; ++y)
+	{
+		int fY = y - location.y; // because of the translation
+
+		// we are done of we have processed all rows of the foreground image.
+		if (fY >= mask.rows)
+			break;
+
+		// start at the column indicated by location,
+
+		// or at column 0 if location.x is negative.
+		for (int x = std::max(location.x, 0); x < background.cols; ++x)
+		{
+			int fX = x - location.x; // because of the translation.
+
+			// we are done with this row if the column is outside of the foreground image.
+			if (fX >= mask.cols)
+				break;
+
+			// determine the opacity of the foregrond pixel, using its fourth (alpha) channel.
+			double opacity = (static_cast<double>(mask.data[fY * mask.step + fX * mask_channels + 3])) / 255.;
+
+			// and now combine the background and foreground pixel, using the opacity,
+
+			// but only if opacity > 0.
+			for (int c = 0; opacity > 0 && c < background_channels; ++c)
+			{
+				unsigned char foregroundPx = mask.data[fY * mask.step + fX * mask_channels + c];
+				unsigned char backgroundPx = background.data[y * background.step + x * background_channels + c];
+				background.data[y * background.step + background_channels * x + c] = backgroundPx * (1. - opacity) + foregroundPx * opacity;
+			}
+		}
+	}
+}
+
+struct Pos
+{
+	int x;
+	int y;
+};
+
+Pos getRandomPos(const cv::Size& backSize, const cv::Size& maskSize)
+{
+	int max_x = backSize.width - maskSize.width;
+	int max_y = backSize.height - maskSize.height;
+
+	return { simG::Random::uniformInt(0, max_x), simG::Random::uniformInt(0, max_y) };
+}
+
+using CvContours = std::vector<std::vector<cv::Point>>;
+
+void overlay1(const cv::Mat& mask, const cv::Size& backsize, CvContours& cntrs)
+{
+	cv::Mat tmp = cv::Mat::zeros(cv::Size(backsize.width, backsize.height), CV_8UC1);
+
+	overlayImage(tmp, mask, { 10, 10 });
+
+	cntrs.reserve(1);
+
+	cv::findContours(tmp, cntrs, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+}
+
+void overlay2(const cv::Mat& mask, const cv::Size& backsize, CvContours& cntrs)
+{
+	cv::Mat tmp = cv::Mat::zeros(cv::Size(backsize.width, backsize.height), CV_8UC1);
+
+	overlayImage(tmp, mask, { 124, 170 });
+
+	cntrs.reserve(1);
+	//std::vector<cv::Point> contrs;
+	cv::findContours(tmp, cntrs, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+	if (cntrs.size() != 1)
+	{
+		std::cout << "Size Alarn\n";
+		exit(-1);
+	}
+}
+
+bool doMaskIntersect(const CvContours& prevContour, const CvContours& currContour)
+{
+	cv::Mat check1, check2, result;
+
+	cv::drawContours(check1, prevContour, 0, 1);
+	cv::drawContours(check2, currContour, 0, 1);
+
+	cv::bitwise_and(check1, check2, result);
+	cv::imshow("ss", check1);
+	cv::waitKey(0);
+	return false;
+}
+
+bool ccw(const cv::Point& A, const cv::Point& B, const cv::Point& C)
+{
+	return ((C.y - A.y) * (B.x - A.x)) > ((B.y - A.y) * (C.x - A.x));
+}
+
+bool fastContourIntersectInt(const std::vector<cv::Point>& refContour, const std::vector<cv::Point>& queryContour)
+{
+	for (size_t rIdx = 0; rIdx < refContour.size() - 1; rIdx++)
+	{
+		auto A = refContour[rIdx];
+		auto B = refContour[rIdx + 1];
+
+		for (size_t qIdx = 0; qIdx < queryContour.size() - 1; qIdx++)
+		{
+			auto C = queryContour[qIdx];
+			auto D = queryContour[qIdx + 1];
+			if ((ccw(A, C, D) != ccw(B, C, D)) && (ccw(A, B, C) != ccw(A, B, D)))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 
-bool callTerminal()
-{
-	
-	auto response = system("cd /D C:\\Users\\ruwen\Desktop\\iav_Werkstudent\\yolact_IAV\\testing");
-	simG::print(response);
 
-	return response;
+void test_overlay()
+{
+	auto mask = cv::imread(R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test\t_img_klein0.png)", -1);
+	auto back = cv::imread(R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test\background0.jpg)");
+
+	auto pos = getRandomPos(back.size(), mask.size());
+	CvContours cntrs1;
+	CvContours cntrs2;
+
+	overlay1(mask, back.size(), cntrs1);
+	overlay2(mask, back.size(), cntrs2);
+	auto start = std::chrono::high_resolution_clock::now();
+
+	//bool res = fastContourIntersectInt(cntrs1[0], cntrs2[0]);
+	bool res = simG::algorithms::fastContourIntersect(cntrs1[0], cntrs2[0]);
+	auto end = std::chrono::high_resolution_clock::now();
+	duration<double, std::milli> ms_double = end - start;
+	std::cout << ms_double.count() << "ms\n";
+	//simG::print(res);
+	//doMaskIntersect(cntrs1, cntrs2);
+
+	//cv::Mat tmp = cv::Mat::zeros(cv::Size(back.cols, back.rows), CV_8UC1);
+
+	//overlayImage(tmp, mask, { 10, 10 });
+
+	//CvContours contrs;
+	//cv::findContours(tmp, contrs, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+	cv::drawContours(back, cntrs1, 0, cv::Scalar(0, 255, 0), 1);
+	cv::drawContours(back, cntrs2, 0, cv::Scalar(0, 255, 0), 1);
+
+	//simG::print(tmp.channels());
+	//auto max_x = back.size().width - mask.size().width
+
+	//auto end = std::chrono::high_resolution_clock::now();
+	//duration<double, std::milli> ms_double = end - start;
+	//std::cout << ms_double.count() << "ms\n";
+
+	cv::imshow("", back);
+	cv::waitKey(0);
+	exit(0);
 }
 
 int main()
 {
-	system("cd && cd resources/weights && cd");
-	//AugmentationConfig config_;
+	test_overlay();
+	//atuo back = Mat::zeros(Size(image.cols, image.rows), CV_8UC1);
+
 	//config_.RandomRotation({ 0, 360 });
 	//config_.RandomCrop({ 1024, 576 }, true);
 	//config_.RandomNoise(0.0, 10.0);
 	//config_.RandomHorizontalFlip(0.5);
 	//config_.RandomVerticalFlip(0.5);
 	//config_.RandomBrightnessShift({ -20.5, 20.5 });
-
 	simG::ImageGenerator::AugmentationParams params;
 	//simG::TransformsList transforms{
 	//	AddTransform<simG::RandomBrightness>({-20.5, 20.5})
@@ -214,37 +435,86 @@ int main()
 	//params.MaskAugs.brightness.do_shift = true;
 	//params.MaskAugs.brightness.brightness_range = { -20.5, 20.5 };
 
+	//simG::transforms::Sequential maskTransforms; //<- Random rotation; radomscale flips, noise
+	//simG::transforms::Sequential BckgrTransforms; <-resize, noise, crop; check that random scale is not smaller than resize
+	//simG::transforms::Sequential BckgrTransforms;
+	//simG::Directory maskDir;
+	//simG::Directory maskDir;
+
 	simG::ImageGenerator generator(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)",
-		R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test)", 500, 5, params);
+		R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test)", params);
 	//MultithreadGenerator mGen(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)");
 
 	auto test_img = cv::imread(R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\resources\t_00000001.jpg)");
-	
 
-	simG::ImageAugmenter augmenter;
+	//
+	//simG::ImageAugmenter augmenter;
 	auto start = std::chrono::high_resolution_clock::now();
 
-	simG::transforms::Sequential transforms({
-		//simG::transforms::RandomScale({0.5, 1.5}),
-		//simG::transforms::RandomCrop({550, 100}, true),
-		//simG::transforms::Resize({600, 400}, true),
-		//simG::transforms::RandomBrightness({-50, 50}),
-		//simG::transforms::GaussianBlur(0.5),
-		//simG::transforms::RandomGaussNoise(0.5),
-		//simG::transforms::RandomVerticalFlip(0.5),
-		//simG::transforms::RandomHorizontalFlip(0.5),
-		// put annotator as transform like in https://github.com/LinkedAi/flip
+	//overlayImage(back, back, { 0,0 });
+	//cv::imshow("", back);
+	//cv::waitKey(0);
 
-		//simG::transforms::RandomRotation90(1),
-		//simG::transforms::RandomRotation180(0.5),
-		//simG::transforms::RandomRotation270(1.0),
-		simG::transforms::RandomRotation({60,60}),
-		});
+	//simG::transforms::RandomRotation layer({ 60,60 });
+	//simG::transforms::Sequential transforms({
+	//	//simG::transforms::RandomScale({0.5, 1.5}),
+	//	//simG::transforms::RandomCrop({550, 100}, true),
+	//	//simG::transforms::Resize({600, 400}, true),
+	//	//simG::transforms::RandomBrightness({-50, 50}),
+	//	//simG::transforms::GaussianBlur(1.0),
+	//	//simG::transforms::RandomGaussNoise(1.0),
+	//	//simG::transforms::RandomVerticalFlip(1.0),
+	//	//simG::transforms::RandomHorizontalFlip(1.0),
+	//	 //put annotator as transform like in https://github.com/LinkedAi/flip
+
+	//	//simG::transforms::RandomRotation90(1),
+	//	//simG::transforms::RandomRotation180(1.0),
+	//	//simG::transforms::RandomRotation270(1.0),
+	//	simG::transforms::RandomRotation({60,60})
+	//	});
+
+	//std::vector<std::variant<simG::transforms::RandomRotation>> vars{
+	//	//simG::transforms::RandomRotation({60,60})
+	//};
+
+	//auto c = transforms;
+
+	//simG::transforms::Sequential maskTransforms({
+	//	//simG::transforms::RandomScale({0.5, 1.5}),
+	//	// simG::transforms::RandomCrop({550, 100}, true),
+	//	//simG::transforms::Resize({600, 400}, true),
+	//	//simG::transforms::RandomBrightness({-50, 50}),
+	//	//simG::transforms::GaussianBlur(1.0),
+	//	});
+
+	//generator.setThreading(simG::ThreadingStatus::ADJUST_TO_CPU);
+	//simG::print(generator.isThreadingEnabled());
+	//generator.addTransforms(transforms, simG::APPLY_ON_BCKGROUND);
+
+	//simG::print(generator.bckgrTransforms_.count());
+
+	//auto b = static_cast<simG::transforms::RandomScale>(generator.m_ImageTransformations[0].first.transforms_[0]);
+
+	//simG::print(generator.m_ImageTransformations[0].first.transforms_[0]->getType());
+
+	//generator.addTransforms(transforms, simG::APPLY_ON_MASK);
+
+	//std::vector<std::pair<simG::transforms::Sequential, simG::TransformTarget>> transformsCont;
+	//transformsCont.emplace_back(transforms, simG::APPLY_ON_BCKGROUND);
+
+	//transformss.emplace_back(transforms, simG::APPLY_ON_RESULT);
+
+	//for (const auto& tr :imageTransforms)
+	//{
+	//	if (tr.target == simG::APPLY_ON_BCKGROUND)
+	//	{
+	//		simG::print("Ja");
+	//	}
 
 	//cv::Mat dst;
 	//transforms.apply(test_img, dst);
 	//cv::imshow("", dst);
-	//cv::waitKey(0);t
+	//cv::waitKey(0);
 
 	//simG::Directory dir(R"(C:\Users\ruwen\Desktop\iav_Werkstudent\Dataset\Datasat_keep_aspect\train\images)");
 
