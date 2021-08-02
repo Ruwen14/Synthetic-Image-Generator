@@ -359,8 +359,6 @@ bool fastContourIntersectInt(const std::vector<cv::Point>& refContour, const std
 	return false;
 }
 
-
-
 void test_overlay()
 {
 	auto mask = cv::imread(R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test\t_img_klein0.png)", -1);
@@ -379,7 +377,7 @@ void test_overlay()
 	auto end = std::chrono::high_resolution_clock::now();
 	duration<double, std::milli> ms_double = end - start;
 	std::cout << ms_double.count() << "ms\n";
-	//simG::print(res);
+	simG::print(res);
 	//doMaskIntersect(cntrs1, cntrs2);
 
 	//cv::Mat tmp = cv::Mat::zeros(cv::Size(back.cols, back.rows), CV_8UC1);
