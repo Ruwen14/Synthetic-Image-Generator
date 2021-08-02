@@ -48,6 +48,12 @@
     <ClCompile Include="src\simG\core\transforms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\simG\utils\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\simG\core\algorithms.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\simG\utils\Random.h">
@@ -95,14 +101,11 @@
     <ClInclude Include="src\simG.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\..\Downloads\commands.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\Downloads\00.weights" />
-    <None Include="..\..\..\Downloads\01.weights" />
-    <None Include="..\..\..\Downloads\02.weights" />
-    <None Include="..\..\..\Downloads\yolov3-openimages.weights" />
+    <ClInclude Include="src\simG\utils\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\simG\core\algorithms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

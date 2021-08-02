@@ -154,6 +154,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\simG\core\algorithms.cpp" />
+    <ClCompile Include="src\simG\utils\Timer.cpp" />
     <ClCompile Include="src\simG\utils\foregroundextractor.cpp" />
     <ClCompile Include="src\simG\core\imggenerator.cpp" />
     <ClCompile Include="src\simG\annotator\CocoISAnnotator.cpp" />
@@ -169,6 +171,8 @@
     <ClCompile Include="src\simG\core\transforms.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\simG\core\algorithms.h" />
+    <ClInclude Include="src\simG\utils\Timer.h" />
     <ClInclude Include="src\simG.h" />
     <ClInclude Include="src\simG\core\types.h" />
     <ClInclude Include="src\simG\utils\foregroundextractor.h" />
@@ -184,15 +188,6 @@
     <ClInclude Include="src\simG\utils\Random.h" />
     <ClInclude Include="src\simG\annotator\YoloAnnotator.h" />
     <ClInclude Include="src\simG\core\transforms.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\..\Downloads\commands.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\Downloads\00.weights" />
-    <None Include="..\..\..\Downloads\01.weights" />
-    <None Include="..\..\..\Downloads\02.weights" />
-    <None Include="..\..\..\Downloads\yolov3-openimages.weights" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
