@@ -6,19 +6,6 @@
 
 namespace simG
 {
-	template<typename Arg>
-	void print(const Arg& out, bool newline = true)
-	{
-		if (newline)
-		{
-			std::cout << out << "\n";
-		}
-		else
-		{
-			std::cout << out;
-		}
-	}
-
 	// Directory Class is inspired by QDir from the Qt-Framework and provides access to directories and their contents
 	class Directory
 	{
