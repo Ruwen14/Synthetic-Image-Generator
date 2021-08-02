@@ -194,6 +194,7 @@ namespace simG
 
 		cv::Mat RandomBrightness::operator()(cv::Mat& srcSample) const
 		{
+			//std::cout << beta_r_.lower << ", " << beta_r_.upper << "\n";
 			double beta = Random::uniformDouble(beta_r_.lower, beta_r_.upper);
 			if (beta == 0)
 			{
@@ -283,62 +284,62 @@ namespace simG
 				{
 				case 0:
 					transforms_.push_back(
-						std::make_unique<RandomRotation>(std::get<RandomRotation>(curr_transform))
+						std::make_shared<RandomRotation>(std::get<RandomRotation>(curr_transform))
 					);
 					break;
 				case 1:
 					transforms_.push_back(
-						std::make_unique<RandomRotation90>(std::get<RandomRotation90>(curr_transform))
+						std::make_shared<RandomRotation90>(std::get<RandomRotation90>(curr_transform))
 					);
 					break;
 				case 2:
 					transforms_.push_back(
-						std::make_unique<RandomRotation180>(std::get<RandomRotation180>(curr_transform))
+						std::make_shared<RandomRotation180>(std::get<RandomRotation180>(curr_transform))
 					);
 					break;
 				case 3:
 					transforms_.push_back(
-						std::make_unique<RandomRotation270>(std::get<RandomRotation270>(curr_transform))
+						std::make_shared<RandomRotation270>(std::get<RandomRotation270>(curr_transform))
 					);
 					break;
 				case 4:
 					transforms_.push_back(
-						std::make_unique<RandomHorizontalFlip>(std::get<RandomHorizontalFlip>(curr_transform))
+						std::make_shared<RandomHorizontalFlip>(std::get<RandomHorizontalFlip>(curr_transform))
 					);
 					break;
 				case 5:
 					transforms_.push_back(
-						std::make_unique<RandomVerticalFlip>(std::get<RandomVerticalFlip>(curr_transform))
+						std::make_shared<RandomVerticalFlip>(std::get<RandomVerticalFlip>(curr_transform))
 					);
 					break;
 				case 6:
 					transforms_.push_back(
-						std::make_unique<RandomCrop>(std::get<RandomCrop>(curr_transform))
+						std::make_shared<RandomCrop>(std::get<RandomCrop>(curr_transform))
 					);
 					break;
 				case 7:
 					transforms_.push_back(
-						std::make_unique<Resize>(std::get<Resize>(curr_transform))
+						std::make_shared<Resize>(std::get<Resize>(curr_transform))
 					);
 					break;
 				case 8:
 					transforms_.push_back(
-						std::make_unique<RandomScale>(std::get<RandomScale>(curr_transform))
+						std::make_shared<RandomScale>(std::get<RandomScale>(curr_transform))
 					);
 					break;
 				case 9:
 					transforms_.push_back(
-						std::make_unique<RandomBrightness>(std::get<RandomBrightness>(curr_transform))
+						std::make_shared<RandomBrightness>(std::get<RandomBrightness>(curr_transform))
 					);
 					break;
 				case 10:
 					transforms_.push_back(
-						std::make_unique<RandomGaussNoise>(std::get<RandomGaussNoise>(curr_transform))
+						std::make_shared<RandomGaussNoise>(std::get<RandomGaussNoise>(curr_transform))
 					);
 					break;
 				case 11:
 					transforms_.push_back(
-						std::make_unique<GaussianBlur>(std::get<GaussianBlur>(curr_transform))
+						std::make_shared<GaussianBlur>(std::get<GaussianBlur>(curr_transform))
 					);
 					break;
 				default:

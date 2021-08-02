@@ -2,6 +2,7 @@
 #include "imgaugmenter.h"
 #include "../annotator/AbstractAnnotator.h"
 #include "../utils/Directory.h"
+#include "transforms.h"
 
 #include <iostream>
 #include <string>
@@ -87,6 +88,10 @@ namespace simG
 		NUM_THREADS_6 = 6, NUM_THREADS_7 = 7, NUM_THREADS_8 = 8
 	};
 
+	enum TransformTarget {
+		APPLY_ON_MASK = 0, APPLY_ON_BCKGROUND = 1, APPLY_ON_RESULT = 2
+	};
+
 	class ImageGenerator
 	{
 	public:
@@ -96,8 +101,6 @@ namespace simG
 		ImageGenerator(
 			const std::string& maskDir,
 			const std::string& backgroundDir,
-			int numberImages,
-			int objectsPerImage,
 			const AugmentationParams& params,
 			AbstractAnnotator* imageAnnotator
 		);
@@ -105,21 +108,26 @@ namespace simG
 		ImageGenerator(
 			const std::string& maskDir,
 			const std::string& backgroundDir,
-			int numberImages,
-			int objectsPerImage,
 			const AugmentationParams& params
+		);
+
+		ImageGenerator(
+			const Directory& maskDir,
+			const Directory& bckgndDir,
+			ThreadingStatus tStatus,
+			AbstractAnnotator* imageAnnotator
 		);
 
 		~ImageGenerator() = default;
 
 		cv::Mat forward(); // return struct of image and annotation (string representation) auto [img, anno]
-		void generate(); //Rename to apply(dir, dir, outdir)
-		bool hasFinished() const;
+		void generate(int targetNumber = 1000); //Rename to apply(dir, dir, outdir)
+		void addTransforms(const transforms::Sequential& transforms, TransformTarget target);
 		void setThreading(ThreadingStatus tStatus);
+		void setNumberObjects(int lower, int upper);
+		bool isThreadingEnabled() const;
 
-		int image_count = 0;
-
-	protected:
+	public:
 		void runSequential_();
 		void runParallel_();
 		void augmentMask(cv::Mat& maskSample) const;
@@ -127,18 +135,17 @@ namespace simG
 		void compose(const cv::Mat& srcComp1, const cv::Mat& srcComp2, cv::Mat& dst) const;
 		bool overlap() const;
 
-		Directory MaskDir_;
-		Directory BckgrndDir_;
-		bool valid_flag_ = true;
-		int target_images_;
-		int obj_per_image_;
-		int num_workers_ = static_cast<int>(ThreadingStatus::DISABLE_THREADING);
+		Directory maskDir_;
+		Directory bckgrDir_;
+		simG::Range<int> numberObjects_;
+		int numWorkers_ = static_cast<int>(ThreadingStatus::DISABLE_THREADING);
+
+		transforms::Sequential maskTransforms_;
+		transforms::Sequential bckgrTransforms_;
+		transforms::Sequential resultTransforms_;
+
 		AugmentationParams augparams_;
 		ImageAugmenter augmenter_;
 		AbstractAnnotator* annotator_;
-
-	private:
-		void begin() const;
-		void end() const;
 	};
 }
