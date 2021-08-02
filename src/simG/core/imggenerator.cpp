@@ -4,15 +4,17 @@
 
 namespace simG
 {
+	class Compose
+	{
+	};
+
 	ImageGenerator::ImageGenerator(
 		const std::string& maskDir,
 		const std::string& backgroundDir,
-		int numberImages,
-		int objectsPerImage,
 		const AugmentationParams& params,
 		AbstractAnnotator* imageAnnotator
 	)
-		: MaskDir_(maskDir), BckgrndDir_(backgroundDir), target_images_(numberImages), obj_per_image_(objectsPerImage), augparams_(params), annotator_(imageAnnotator)
+		: maskDir_(maskDir), bckgrDir_(backgroundDir), numberObjects_{ 1, 5 }, augparams_(params), annotator_(imageAnnotator)
 	{
 		//if (MaskDir_.isEmpty())
 		//{
@@ -28,36 +30,34 @@ namespace simG
 	ImageGenerator::ImageGenerator(
 		const std::string& maskDir,
 		const std::string& backgroundDir,
-		int numberImages,
-		int objectsPerImage,
 		const AugmentationParams& params
 	)
-		: ImageGenerator(maskDir, backgroundDir, numberImages, objectsPerImage, params, nullptr)
+		: ImageGenerator(maskDir, backgroundDir, params, nullptr)
 	{
 	}
 
 	cv::Mat ImageGenerator::forward()
 	{
-		cv::Mat bckgr_sample = cv::imread(BckgrndDir_.relativeFilePath(BckgrndDir_.cycleEntry()), cv::IMREAD_COLOR);
+		cv::Mat bckgr_sample = cv::imread(bckgrDir_.relativeFilePath(bckgrDir_.cycleEntry()), cv::IMREAD_COLOR);
 		augmentBackground(bckgr_sample);
 
-		for (int i = 0; i < obj_per_image_; i++)
-		{
-		}
+		//for (int i = 0; i < numberObjects; i++)
+		//{
+		//}
 
 		//cv::imshow("Window", bckgr_sample);
 
 		//cv::waitKey(0);
 
-		++image_count;
+		//++image_count;
 		return bckgr_sample;
 	}
 
-	void ImageGenerator::generate()
+	void ImageGenerator::generate(int targetNumber /*= 1000*/)
 	{
-		if (this->num_workers_ > 1)
+		if (this->numWorkers_ > 1)
 		{
-			std::cout << "[INFO]: Running Loop with Multithreading[enabled::<" << this->num_workers_ << ">workers]" << "\n";
+			std::cout << "[INFO]: Running Loop with Multithreading[enabled::<" << this->numWorkers_ << ">workers]" << "\n";
 			runParallel_();
 		}
 		else
@@ -67,9 +67,22 @@ namespace simG
 		}
 	}
 
-	bool ImageGenerator::hasFinished() const
+	void ImageGenerator::addTransforms(const transforms::Sequential& transforms, TransformTarget target)
 	{
-		return this->image_count == this->target_images_;
+		switch (target)
+		{
+		case APPLY_ON_MASK:
+			this->maskTransforms_ = transforms;
+			break;
+		case APPLY_ON_BCKGROUND:
+			this->bckgrTransforms_ = transforms;
+			break;
+		case APPLY_ON_RESULT:
+			this->resultTransforms_ = transforms;
+			break;
+		default:
+			break;
+		}
 	}
 
 	void ImageGenerator::setThreading(ThreadingStatus tStatus)
@@ -86,25 +99,51 @@ namespace simG
 				"	   Otherwise do 'setThreading(simG::ThreadingStatus::DISABLE_THREADING)' to disable the warning. \n";
 			std::cout << warningText << "\n";
 
-			this->num_workers_ == static_cast<int>(ThreadingStatus::DISABLE_THREADING);
+			this->numWorkers_ == static_cast<int>(ThreadingStatus::DISABLE_THREADING);
 		}
 		else if (tStatus == ThreadingStatus::ADJUST_TO_CPU)
 		{
-			this->num_workers_ = omp_get_num_procs();
+			this->numWorkers_ = omp_get_num_procs();
 		}
 		else
 		{
-			this->num_workers_ = static_cast<int>(tStatus);
+			this->numWorkers_ = static_cast<int>(tStatus);
 		}
+	}
+
+	void ImageGenerator::setNumberObjects(int lower, int upper)
+	{
+		if ((lower < 1) || (upper < 1))
+		{
+			std::cout << "lower or upper are not allowed to be smaller than 1\n";
+			return;
+		}
+
+		if (lower > upper)
+		{
+			std::cout << "lower is not allowed to be bigger than upper\n";
+			return;
+		}
+
+		this->numberObjects_.lower = lower;
+		this->numberObjects_.upper = upper;
+	}
+
+	bool ImageGenerator::isThreadingEnabled() const
+	{
+		if (this->numWorkers_ > 1) {
+			return true;
+		}
+		return false;
 	}
 
 	void ImageGenerator::runSequential_()
 	{
 		return;
-		while (!hasFinished())
-		{
-			cv::Mat composit = forward();
-		}
+		//while (!hasFinished())
+		//{
+		//	cv::Mat composit = forward();
+		//}
 	}
 
 	void ImageGenerator::runParallel_()
@@ -159,14 +198,6 @@ namespace simG
 	}
 
 	bool ImageGenerator::overlap() const
-	{
-	}
-
-	void ImageGenerator::begin() const
-	{
-	}
-
-	void ImageGenerator::end() const
 	{
 	}
 }
