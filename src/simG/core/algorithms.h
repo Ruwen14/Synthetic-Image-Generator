@@ -21,7 +21,42 @@ namespace simG
 		bool fastContourIntersect(const std::vector<cv::Point>& refContour, const std::vector<cv::Point>& queryContour);
 
 		cv::Mat generateZeroMatrix(int width, int height);
+
+		template<typename T>
+		std::vector<T> resizeVec(const std::vector<T>& srcVec, const std::size_t tSize)
+		{
+			std::vector<T> dstVec;
+			dstVec = srcVec;
+
+			if (tSize == srcVec.size())
+			{
+				return dstVec;
+			}
+
+			if (tSize < srcVec.size())
+			{
+				dstVec.resize(tSize);
+				return dstVec;
+			}
+
+			dstVec.reserve(tSize);
+			while (dstVec.size() < tSize)
+			{
+				if ((dstVec.size() + srcVec.size()) <= tSize)
+				{
+					dstVec.insert(dstVec.end(), srcVec.begin(), srcVec.end());
+				}
+				else
+				{
+					std::vector<T> slicedVec = std::vector<T>(
+						srcVec.begin(),
+						srcVec.begin() + (tSize - dstVec.size())
+						);
+					dstVec.insert(dstVec.end(), slicedVec.begin(), slicedVec.end());
+				}
+			}
+
+			return dstVec;
+		}
 	}
-
-
 }

@@ -72,8 +72,7 @@ namespace simG
 
 		cv::Mat generateZeroMatrix(int width, int height)
 		{
-			return cv::Mat::zeros(cv::Size(width,height), CV_8UC1);
+			return cv::Mat::zeros(cv::Size(width, height), CV_8UC1);
 		}
-
 	}
 }
