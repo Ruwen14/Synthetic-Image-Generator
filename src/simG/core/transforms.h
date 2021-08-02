@@ -161,10 +161,13 @@ namespace simG
 		{
 		};
 
+		/** @brief Randomly resize the input.
+		*@param scaleLimits: min and max values between which a value is randomly selected.
+		*/
 		class RandomScale : public Transformation
 		{
 		public:
-			RandomScale(Range<double> scaleLimits) 
+			RandomScale(Range<double> scaleLimits)
 				: scale_limits_(scaleLimits) {};
 			//virtual ~RandomScale() = default;
 
@@ -242,10 +245,12 @@ namespace simG
 				RandomRotation, RandomRotation90, RandomRotation180, RandomRotation270, RandomHorizontalFlip,
 				RandomVerticalFlip, RandomCrop, Resize, RandomScale, RandomBrightness, RandomGaussNoise, GaussianBlur>;
 
-			using HoldTransforms = std::vector<std::unique_ptr<Transformation>>;
+			using TfContainer = std::vector<std::shared_ptr<Transformation>>;
 
+			Sequential() = default;
 			Sequential(const std::vector<Transformers>& transformsList);
-			Sequential(const Sequential&) = delete;
+			//Sequential(const Sequential&) = delete;
+			//Sequential(const Sequential&) {std::cout << "Copied Sequential\n"; }
 			~Sequential() = default;
 			/** @brief Applies selected transformations to an input sample.
 			@param src: input matrix. @param dst: destination matrix that reflects transformations.
@@ -268,7 +273,7 @@ namespace simG
 		public:
 			void populate(const std::vector<Transformers>& transforms_list);
 
-			HoldTransforms transforms_;
+			TfContainer transforms_;
 		};
 	}
 }
