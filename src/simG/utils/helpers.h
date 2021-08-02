@@ -107,6 +107,31 @@ namespace simG
 		cv::imshow(windowsTitle, canvasImage);
 		cv::waitKey(0);
 	}
+
+	template<typename Arg>
+	void print(const Arg& out, bool newline = true)
+	{
+		if (newline)
+		{
+			std::cout << out << "\n";
+		}
+		else
+		{
+			std::cout << out;
+		}
+	}
+
+	template<typename T>
+	std::string getObjType(T obj)
+	{
+		return static_cast<std::string>(typeid(obj).name());
+	}
+
+	template<typename T>
+	void printObjType(T obj)
+	{
+		print(getObjType(obj));
+	}
 }
 
 template <typename T>
