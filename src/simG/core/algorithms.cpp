@@ -1,5 +1,6 @@
 #include "algorithms.h"
-
+#include <opencv2/imgproc.hpp>
+#include <iostream>
 namespace simG
 {
 	namespace algorithms
@@ -73,6 +74,22 @@ namespace simG
 		cv::Mat generateZeroMatrix(int width, int height)
 		{
 			return cv::Mat::zeros(cv::Size(width, height), CV_8UC1);
+		}
+
+		void translateContour(std::vector<cv::Point>& contour, int dx, int dy)
+		{
+			for (auto& point : contour)
+			{
+				point.x += dx;
+				point.y += dy;
+			}
+		}
+
+		void simplifyContour(const std::vector<cv::Point>& srcCntr, std::vector<cv::Point>& dstCntr, float tolerance)
+		{
+			auto eps = tolerance * cv::arcLength(srcCntr, true);
+			//std::cout << eps <<"\n";
+			cv::approxPolyDP(srcCntr, dstCntr, 1, true);
 		}
 	}
 }
