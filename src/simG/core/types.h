@@ -1,7 +1,31 @@
 #pragma once
-
-struct Pos
+#include <string>
+namespace simG
 {
-	int x;
-	int y;
-};
+	struct Pos
+	{
+		int x;
+		int y;
+	};
+
+	struct BoundingBox
+	{
+		int x;
+		int y;
+		int w;
+		int h;
+	};
+
+	struct Dims
+	{
+		int width;
+		int height;
+	};
+
+	template<typename T>
+	struct Rang
+	{
+		T lower;
+		T upper;
+	};
+}
