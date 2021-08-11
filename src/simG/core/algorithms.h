@@ -22,6 +22,10 @@ namespace simG
 
 		cv::Mat generateZeroMatrix(int width, int height);
 
+		void translateContour(std::vector<cv::Point>& contour, int dx, int dy);
+
+		void simplifyContour(const std::vector<cv::Point>& srcCntr, std::vector<cv::Point>& dstCntr, float tolerance);
+
 		template<typename T>
 		std::vector<T> resizeVec(const std::vector<T>& srcVec, const std::size_t tSize)
 		{
