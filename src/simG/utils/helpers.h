@@ -45,7 +45,6 @@ namespace simG
 	/**
 	* @brief Shows composite image from the given images
 	* @param imgArray Vector of Images.
-	* @param windowHeight The height of the new composite image to be formed.
 	* @param nRows Number of rows of images. (Number of columns will be calculated
 	*              depending on the value of total number of images).
 	*/

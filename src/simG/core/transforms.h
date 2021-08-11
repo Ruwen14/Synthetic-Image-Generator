@@ -186,6 +186,8 @@ namespace simG
 		public:
 			RandomBrightness(Range<double> betaRange, double alpha = 1)
 				: beta_r_(betaRange), alpha_(alpha) {}
+
+			//RandomBrightness(const RandomBrightness&) { std::cout << "copied\n"; }
 			//virtual ~RandomBrightness() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
@@ -274,6 +276,62 @@ namespace simG
 			void populate(const std::vector<Transformers>& transforms_list);
 
 			TfContainer transforms_;
+		};
+
+		/** @brief A sequential container that holds transforms (see simG::transforms in transforms.h).
+		 * Transforms are added in the order in which they are passed in the constructor.
+		 * The ``apply()`` method is used to apply selected transforms to an input sample.
+		 * @param transformsList: vector of transformers  listed in transforms.h (accessible via simG::transforms::).
+		 */
+		class Sequential2
+		{
+		public:
+			using Transform = std::variant<
+				RandomRotation, RandomRotation90, RandomRotation180, RandomRotation270, RandomHorizontalFlip,
+				RandomVerticalFlip, RandomCrop, Resize, RandomScale, RandomBrightness, RandomGaussNoise, GaussianBlur>;
+
+			Sequential2() = default;
+			Sequential2(const std::vector<Transform>& transformations);
+			//Sequential(const Sequential&) = delete;
+			//Sequential(const Sequential&) {std::cout << "Copied Sequential\n"; }
+			~Sequential2() = default;
+
+			/** @brief Applies selected transformations to an input sample.
+			@param src: input matrix. @param dst: destination matrix that reflects transformations.
+			*/
+			void apply(const cv::Mat& src, cv::Mat& dst) const;
+
+			/** @brief Applies selected transformations to an input sample.
+			@param src: input matrix. @param dst: destination matrix that reflects transformations.
+			*/
+			void operator()(const cv::Mat& src, cv::Mat& dst) const;
+
+			/** @brief Adds a Transformation to the sequential container.
+			@param tf: transformation of type Transform (variant).
+			*/
+			void add(const Transform& tf);
+
+			/** @brief Inserts Transformation of at specific position in the container.
+			@param tf: transformation of type Transform (variant).
+			@param index: position of insertion.
+			*/
+			void insert(const Transform& tf, size_t index);
+
+			/** @brief Removes last Transformation in the container. */
+			void pop();
+
+			void measureTransforms(const cv::Mat& src, cv::Mat& dst) const;
+
+			/** @brief Returns the number of transformers that the container currently contains.
+			*/
+			int count() const;
+
+			/** @brief Returns a printable string representation of the container and its contents.
+			*/
+			std::string dump() const;
+
+		private:
+			std::vector<Transform> transforms_;
 		};
 	}
 }

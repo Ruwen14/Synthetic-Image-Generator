@@ -347,5 +347,83 @@ namespace simG
 				}
 			}
 		}
+
+		Sequential2::Sequential2(const std::vector<Transform>& transformations)
+			:transforms_(transformations)
+		{
+		}
+
+		void Sequential2::apply(const cv::Mat& src, cv::Mat& dst) const
+		{
+			assert(3 == 0);
+			dst = src;
+			if (count() == 0)
+				return;
+
+			auto caller = [&dst](const auto& transObj) {dst = transObj(dst); };
+			for (const auto& transformation : transforms_)
+			{
+				std::visit(caller, transformation);
+			}
+		}
+
+		void Sequential2::operator()(const cv::Mat& src, cv::Mat& dst) const
+		{
+			apply(src, dst);
+		}
+
+		void Sequential2::add(const Transform& tf)
+		{
+			transforms_.push_back(tf);
+		}
+
+		void Sequential2::insert(const Transform& tf, size_t index)
+		{
+			transforms_.insert(transforms_.begin() + index, tf);
+		}
+
+		void Sequential2::pop()
+		{
+			transforms_.pop_back();
+		}
+
+		void Sequential2::measureTransforms(const cv::Mat& src, cv::Mat& dst) const
+		{
+			dst = src;
+			auto caller = [&dst](const auto& transObj) {dst = transObj(dst); };
+			int pos = 0;
+			for (const auto& transformation : transforms_)
+			{
+				auto start = std::chrono::high_resolution_clock::now();
+				std::visit(caller, transformation);
+				auto end = std::chrono::high_resolution_clock::now();
+				std::chrono::duration<double, std::milli> ms_double = end - start;
+				std::cout << "LAYER <" << pos << ">: took " << ms_double.count() << "ms\n";
+				++pos;
+			}
+		}
+
+		int Sequential2::count() const
+		{
+			return transforms_.size();
+		}
+
+		std::string Sequential2::dump() const
+		{
+			std::stringstream out;
+			int pos = 0;
+			auto stringifier = [](const auto& transObj) {return transObj.getType(); };
+
+			out << typeid(*this).name() << " {\n";
+			for (const auto& trans : transforms_)
+			{
+				out << "\tINDEX <" << pos << ">: " << std::visit(stringifier, trans) << "\n";
+
+				++pos;
+			}
+			out << "}\n";
+
+			return out.str();
+		}
 	}
 }

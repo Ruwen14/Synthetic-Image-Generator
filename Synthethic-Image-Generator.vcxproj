@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\simG\core\algorithms.cpp" />
+    <ClCompile Include="src\simG\main.cpp" />
     <ClCompile Include="src\simG\utils\Timer.cpp" />
     <ClCompile Include="src\simG\utils\foregroundextractor.cpp" />
     <ClCompile Include="src\simG\core\imggenerator.cpp" />
@@ -164,14 +165,12 @@
     <ClCompile Include="src\simG\core\imgaugmenter.cpp" />
     <ClCompile Include="src\simG\annotator\annotator.cpp" />
     <ClCompile Include="src\simG\utils\Random.cpp" />
-    <ClCompile Include="src\simG\Synthethic-Image-Generator.cpp">
-      <OpenMPSupport Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</OpenMPSupport>
-    </ClCompile>
     <ClCompile Include="src\simG\annotator\YoloAnnotator.cpp" />
     <ClCompile Include="src\simG\core\transforms.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\simG\core\algorithms.h" />
+    <ClInclude Include="src\simG\EXTERNAL_TEST.h" />
     <ClInclude Include="src\simG\utils\Timer.h" />
     <ClInclude Include="src\simG.h" />
     <ClInclude Include="src\simG\core\types.h" />

@@ -2,7 +2,7 @@
 #include "AbstractAnnotator.h"
 namespace simG
 {
-	enum class CocoType {OBJECT_DET, SEGMENTATION};
+	enum class CocoType { OBJECT_DET, SEGMENTATION };
 
 	// Annotates in the Coco-Instance-Segmentation-Format
 	class CocoISAnnotator : public AbstractAnnotator

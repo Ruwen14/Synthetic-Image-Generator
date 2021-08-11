@@ -25,7 +25,6 @@ namespace simG
 		cv::Mat bgrnd_component;
 	};
 
-
 	// ToDO see all formats: https://remo.ai/docs/annotation-formats/
 	// https://blog.roboflow.com/how-to-convert-annotations-from-voc-xml-to-coco-json/
 	class AbstractAnnotator
@@ -142,5 +141,4 @@ namespace simG
 //		duration<double, std::milli> ms_double = end - start;
 //		std::cout << ms_double.count() << "ms\n";
 //	}
-
 }
