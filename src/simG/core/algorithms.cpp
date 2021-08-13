@@ -1,6 +1,8 @@
 #include "algorithms.h"
 #include <opencv2/imgproc.hpp>
 #include <iostream>
+#include <random>
+
 namespace simG
 {
 	namespace algorithms
@@ -91,5 +93,25 @@ namespace simG
 			//std::cout << eps <<"\n";
 			cv::approxPolyDP(srcCntr, dstCntr, 1, true);
 		}
+
+		std::string pseudoUniqueIdentifier(size_t length)
+		{
+			static auto& chrs = "0123456789"
+				"abcdefghijklmnopqrstuvwxyz"
+				"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+			static thread_local  std::mt19937 rg{ std::random_device{}() };
+			static thread_local  std::uniform_int_distribution<std::string::size_type> pick(0, sizeof(chrs) - 2);
+
+			std::string s;
+
+			s.reserve(length);
+
+			while (length--)
+				s += chrs[pick(rg)];
+
+			return s;
+		}
+
 	}
 }

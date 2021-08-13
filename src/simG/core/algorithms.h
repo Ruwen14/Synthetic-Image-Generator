@@ -26,6 +26,9 @@ namespace simG
 
 		void simplifyContour(const std::vector<cv::Point>& srcCntr, std::vector<cv::Point>& dstCntr, float tolerance);
 
+		// from https://stackoverflow.com/questions/440133/how-do-i-create-a-random-alpha-numeric-string-in-c
+		std::string pseudoUniqueIdentifier(size_t length);
+
 		template<typename T>
 		std::vector<T> resizeVec(const std::vector<T>& srcVec, const std::size_t tSize)
 		{
