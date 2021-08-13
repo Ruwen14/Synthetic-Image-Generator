@@ -35,8 +35,8 @@ namespace simG
 		: ImageGenerator(maskDir, backgroundDir, params, nullptr)
 	{
 	}
-
-	cv::Mat ImageGenerator::forward()
+	
+	simG::ImageCompound ImageGenerator::forward()
 	{
 		cv::Mat bckgr_sample = cv::imread(bckgrDir_.relativeFilePath(bckgrDir_.cycleEntry()), cv::IMREAD_COLOR);
 		augmentBackground(bckgr_sample);
@@ -50,7 +50,8 @@ namespace simG
 		//cv::waitKey(0);
 
 		//++image_count;
-		return bckgr_sample;
+		//return bckgr_sample;
+		return  {};
 	}
 
 	void ImageGenerator::generate(int targetNumber /*= 1000*/)
@@ -153,6 +154,8 @@ namespace simG
 		//# omp parallel for
 		//for (int i = 0; i < list of entries.size; i++)
 		//{
+		//	forward
+		// annoate(imagecompound)
 		//}
 	}
 
