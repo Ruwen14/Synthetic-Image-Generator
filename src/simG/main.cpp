@@ -19,6 +19,7 @@
 #include <cstdio>
 #include <optional>
 
+#include <ctime>
 
 using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
@@ -33,8 +34,11 @@ using std::chrono::milliseconds;
 //# endif
 //#endif
 
+
 int main()
 {
+	
+
 	//std::variant<int, simG::ImageGenerator> vec;
 	// TODO: Use RapidXML for parsing XML; it's header-only and pretty fast.
 
@@ -78,6 +82,8 @@ int main()
 	//simG::Directory maskDir;
 	//simG::Directory maskDir;
 
+
+	//ToDO add Placement Ruleset
 	simG::ImageGenerator generator(R"(C:\Users\ruwen\Desktop\iav_Werkstudent\Dataset\Datasat_keep_aspect\train\images)",
 		R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test)", params);
 	//MultithreadGenerator mGen(R"(C:\Users\ruwen\Desktop\SyntheticDataGenerator_Bachelor\Dataset\input\templates\transportation\car)");
@@ -95,33 +101,33 @@ int main()
 
 	// ToDo: check out https://github.com/jbohnslav/opencv_transforms/blob/master/opencv_transforms/transforms.py
 	//simG::transforms::RandomRotation layer({ 60,60 });
-	simG::transforms::Sequential transforms({
-		simG::transforms::RandomScale({1.5, 1.5}),
-		simG::transforms::RandomCrop({550, 100}, true),
-		simG::transforms::Resize({500, 128}, false),
-		simG::transforms::RandomBrightness({-150, -150}),
-		simG::transforms::GaussianBlur(1.0),
-		//	//simG::transforms::GaussianBlur(1.0),
-		//	//simG::transforms::RandomGaussNoise(1.0),
-		//	//simG::transforms::RandomVerticalFlip(1.0),
-		//	//simG::transforms::RandomHorizontalFlip(1.0),
-		//	////put annotator as transform like in https://github.com/LinkedAi/flip
+	//simG::transforms::Sequential transforms({
+	//	simG::transforms::RandomScale({1.5, 1.5}),
+	//	simG::transforms::RandomCrop({550, 100}, true),
+	//	simG::transforms::Resize({500, 128}, false),
+	//	simG::transforms::RandomBrightness({-150, -150}),
+	//	simG::transforms::GaussianBlur(1.0),
+	//	//	//simG::transforms::GaussianBlur(1.0),
+	//	//	//simG::transforms::RandomGaussNoise(1.0),
+	//	//	//simG::transforms::RandomVerticalFlip(1.0),
+	//	//	//simG::transforms::RandomHorizontalFlip(1.0),
+	//	//	////put annotator as transform like in https://github.com/LinkedAi/flip
 
-		// //  //simG::transforms::RandomRotation90(1.0),
-		// //  //simG::transforms::RandomRotation180(1.0),
-		// //  //simG::transforms::RandomRotation270(1.0),
-		// //  //simG::transforms::RandomRotation({30, 30})
-		});
-
+	//	// //  //simG::transforms::RandomRotation90(1.0),
+	//	// //  //simG::transforms::RandomRotation180(1.0),
+	//	// //  //simG::transforms::RandomRotation270(1.0),
+	//	// //  //simG::transforms::RandomRotation({30, 30})
+	//	});
 
 	simG::transforms::Sequential2 trans({
-		////simG::transforms::RandomScale({1.5, 1.5}),
+		//simG::transforms::RandomScale({1.5, 1.5}),
+		simG::transforms::RandomBrightness({-150, -150}),
+
 		simG::transforms::RandomCrop({550, 100}, true),
 		simG::transforms::Resize({500, 128}, true),
-		simG::transforms::RandomBrightness({-150, -150}),
-		simG::transforms::GaussianBlur(1.0),
-		simG::transforms::RandomGaussNoise(1.0),
-		simG::transforms::RandomVerticalFlip(1.0),
+		//simG::transforms::GaussianBlur(1.0),
+		//simG::transforms::RandomGaussNoise(1.0),
+		//simG::transforms::RandomVerticalFlip(1.0),
 		//simG::transforms::RandomHorizontalFlip(1.0),
 		////put annotator as transform like in https://github.com/LinkedAi/flip
 
@@ -130,11 +136,11 @@ int main()
 	   //simG::transforms::RandomRotation270(1.0),
 	   //simG::transforms::RandomRotation({30, 30})
 		});
-	cv::Mat dst;
-	//trans.apply(test_img, dst);
-	simG::print(trans.dump());
-	//trans.add(rb);
-	trans.measureTransforms(test_img, dst);
+
+	//cv::Mat dst;
+	////trans.apply(test_img, dst);
+	////trans.add(rb);
+	//trans.measureTransforms(test_img, dst);
 	//simG::print(dst.size());
 
 	//transforms.apply(test_img.clone(), dst2);
@@ -268,7 +274,7 @@ int main()
 		"	   >> Threading was therefore disabled for the rest of the program. \n"
 		"	   -- \n"
 		"	   If you still want to use threading add '-openmp' to your compilation commands or \n"
-		"	   select C/C++->Language, and change 'OpenMP Support' to 'Yes' if using Visual Studio 2019. \n"
+		"	   select C/C.++->Language, and change 'OpenMP Support' to 'Yes' if using Visual Studio 2019. \n"
 		"	   -- \n"
 		"	   Otherwise do 'setThreading(simG::ThreadingStatus::DISABLE_THREADING)' to disable the warning. \n";
 	//if (!ImgaGenerator.is_generator_valid())
