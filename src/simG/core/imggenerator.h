@@ -92,6 +92,16 @@ namespace simG
 		APPLY_ON_MASK = 0, APPLY_ON_BCKGROUND = 1, APPLY_ON_RESULT = 2
 	};
 
+	struct ImageCompound
+	{
+		cv::Mat base;
+		std::vector<cv::Mat> objects;
+		// vector<categories>
+		// keypoints ...?
+		// savepath??
+		// name
+	};
+
 	class ImageGenerator
 	{
 	public:
@@ -120,7 +130,7 @@ namespace simG
 
 		~ImageGenerator() = default;
 
-		cv::Mat forward(); // return struct of image and annotation (string representation) auto [img, anno]
+		ImageCompound forward(); // return struct of image and annotation (string representation) auto [img, anno]
 		void generate(int targetNumber = 1000); //Rename to apply(dir, dir, outdir)
 		void addTransforms(const transforms::Sequential& transforms, TransformTarget target);
 		void setThreading(ThreadingStatus tStatus);
