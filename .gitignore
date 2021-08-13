@@ -34,5 +34,6 @@
 x64/
 .vs
 *.weights
+weights/
 *.json
 Release/
