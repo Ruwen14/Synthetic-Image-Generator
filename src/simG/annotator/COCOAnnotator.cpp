@@ -1,4 +1,4 @@
-#include "CocoISAnnotator.h"
+#include "COCOAnnotator.h"
 
 #include "../../external/rapidjson/document.h"
 #include "../../external/rapidjson/writer.h"
@@ -11,14 +11,13 @@
 #include <iostream>
 #include <chrono>
 
-namespace simG
+namespace simG::annotators
 {
-	CocoISAnnotator::CocoISAnnotator(const std::string& annofile_savepath)
-		: AbstractAnnotator(annofile_savepath)
+	COCOAnnotator::COCOAnnotator(const std::string& annofile_savepath, Format f) : AbstractAnnotator(annofile_savepath)
 	{
 	}
 
-	void CocoISAnnotator::annotateImg(const std::vector<cv::Mat>& masks, const AnnotationDictionary& annotationDict)
+	void COCOAnnotator::annotateImg(const std::vector<cv::Mat>& masks, const AnnotationDictionary& annotationDict)
 	{
 		anno_file_ << "CocoIsAnnotor has written";
 	}

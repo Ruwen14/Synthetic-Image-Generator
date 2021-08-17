@@ -1,4 +1,4 @@
-#include "YoloAnnotator.h"
-namespace simG
+#include "YOLOAnnotator.h"
+namespace simG::annotators
 {
 }

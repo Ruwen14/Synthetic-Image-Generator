@@ -7,7 +7,7 @@
 #include <fstream>
 #include <iostream>
 
-namespace simG
+namespace simG::annotators
 {
 	typedef std::ofstream AnnotationFile;
 	// ofstream has enough buffer. Tested with reading and writing 500MB

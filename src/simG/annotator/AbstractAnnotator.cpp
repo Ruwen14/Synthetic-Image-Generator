@@ -1,6 +1,6 @@
 #include "AbstractAnnotator.h"
 
-namespace simG
+namespace simG::annotators
 {
 	AbstractAnnotator::AbstractAnnotator(const std::string& annofile_savepath)
 		: anno_file_(annofile_savepath)

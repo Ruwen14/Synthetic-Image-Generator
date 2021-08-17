@@ -112,7 +112,7 @@ namespace simG
 			const std::string& maskDir,
 			const std::string& backgroundDir,
 			const AugmentationParams& params,
-			AbstractAnnotator* imageAnnotator
+			annotators::AbstractAnnotator* imageAnnotator
 		);
 
 		ImageGenerator(
@@ -125,13 +125,15 @@ namespace simG
 			const Directory& maskDir,
 			const Directory& bckgndDir,
 			ThreadingStatus tStatus,
-			AbstractAnnotator* imageAnnotator
+			annotators::AbstractAnnotator* imageAnnotator
 		);
 
 		~ImageGenerator() = default;
 
 		ImageCompound forward(); // return struct of image and annotation (string representation) auto [img, anno]
-		void generate(int targetNumber = 1000); //Rename to apply(dir, dir, outdir)
+		void generate(int targetNumber, annotators::AbstractAnnotator* annotator = nullptr); //Rename to apply(dir, dir, outdir)
+		void setInput(const Directory& maskdir, const Directory& bckdir);
+		void setOutput(const Directory& out);
 		void addTransforms(const transforms::Sequential& transforms, TransformTarget target);
 		void setThreading(ThreadingStatus tStatus);
 		void setNumberObjects(int lower, int upper);
@@ -140,6 +142,8 @@ namespace simG
 	public:
 		void runSequential_();
 		void runParallel_();
+		void preprocess(cv::Mat& mask, cv::Mat& bckgrnd) const;
+		void postprocess(cv::Mat& result) const;
 		void augmentMask(cv::Mat& maskSample) const;
 		void augmentBackground(cv::Mat& backgrSample) const;
 		void compose(const cv::Mat& srcComp1, const cv::Mat& srcComp2, cv::Mat& dst) const;
@@ -156,6 +160,6 @@ namespace simG
 
 		AugmentationParams augparams_;
 		ImageAugmenter augmenter_;
-		AbstractAnnotator* annotator_;
+		annotators::AbstractAnnotator* annotator_;
 	};
 }

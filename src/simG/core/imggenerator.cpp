@@ -12,7 +12,7 @@ namespace simG
 		const std::string& maskDir,
 		const std::string& backgroundDir,
 		const AugmentationParams& params,
-		AbstractAnnotator* imageAnnotator
+		annotators::AbstractAnnotator* imageAnnotator
 	)
 		: maskDir_(maskDir), bckgrDir_(backgroundDir), numberObjects_{ 1, 5 }, augparams_(params), annotator_(imageAnnotator)
 	{
@@ -35,7 +35,7 @@ namespace simG
 		: ImageGenerator(maskDir, backgroundDir, params, nullptr)
 	{
 	}
-	
+
 	simG::ImageCompound ImageGenerator::forward()
 	{
 		cv::Mat bckgr_sample = cv::imread(bckgrDir_.relativeFilePath(bckgrDir_.cycleEntry()), cv::IMREAD_COLOR);
@@ -54,8 +54,13 @@ namespace simG
 		return  {};
 	}
 
-	void ImageGenerator::generate(int targetNumber /*= 1000*/)
+	void ImageGenerator::generate(int targetNumber, annotators::AbstractAnnotator* annotator /*= nullptr*/)
 	{
+		if (annotator == nullptr)
+		{
+			std::cout << "Hi\n";
+		}
+
 		if (this->numWorkers_ > 1)
 		{
 			std::cout << "[INFO]: Running Loop with Multithreading[enabled::<" << this->numWorkers_ << ">workers]" << "\n";
@@ -66,6 +71,16 @@ namespace simG
 			std::cerr << "[INFO]: Running Loop with Multithreading[disabled]" << ". (Optional) enable it with <setThreading(...)>." << "\n";
 			runSequential_();
 		}
+	}
+
+	void ImageGenerator::setInput(const Directory& maskdir, const Directory& bckdir)
+	{
+
+	}
+
+	void ImageGenerator::setOutput(const Directory& out)
+	{
+
 	}
 
 	void ImageGenerator::addTransforms(const transforms::Sequential& transforms, TransformTarget target)
@@ -100,7 +115,7 @@ namespace simG
 				"	   Otherwise do 'setThreading(simG::ThreadingStatus::DISABLE_THREADING)' to disable the warning. \n";
 			std::cout << warningText << "\n";
 
-			this->numWorkers_ == static_cast<int>(ThreadingStatus::DISABLE_THREADING);
+			this->numWorkers_ = static_cast<int>(ThreadingStatus::DISABLE_THREADING);
 		}
 		else if (tStatus == ThreadingStatus::ADJUST_TO_CPU)
 		{
@@ -157,6 +172,17 @@ namespace simG
 		//	forward
 		// annoate(imagecompound)
 		//}
+	}
+
+	void ImageGenerator::preprocess(cv::Mat& mask, cv::Mat& bckgrnd) const
+{
+		// TODO: augment masks and background
+	}
+
+	void ImageGenerator::postprocess(cv::Mat& result) const
+{
+		// TODO: augment resultimage
+
 	}
 
 	void ImageGenerator::augmentMask(cv::Mat& maskSample) const

@@ -26,6 +26,7 @@ using std::chrono::duration_cast;
 using std::chrono::duration;
 using std::chrono::milliseconds;
 
+using simG::print;
 //#ifndef SIMG_EXPORT
 //# if (defined _WIN32 || defined WINCE || defined __CYGWIN__)
 //#   define SIMG_EXPORT __declspec(dllexport)
@@ -35,10 +36,11 @@ using std::chrono::milliseconds;
 //#endif
 
 
+namespace sa = simG::annotators;
+
 int main()
 {
-	
-
+	sa::COCOAnnotator("hi", sa::COCOAnnotator::KEYPOINTS);
 	//std::variant<int, simG::ImageGenerator> vec;
 	// TODO: Use RapidXML for parsing XML; it's header-only and pretty fast.
 
@@ -81,7 +83,6 @@ int main()
 	//simG::transforms::Sequential BckgrTransforms;
 	//simG::Directory maskDir;
 	//simG::Directory maskDir;
-
 
 	//ToDO add Placement Ruleset
 	simG::ImageGenerator generator(R"(C:\Users\ruwen\Desktop\iav_Werkstudent\Dataset\Datasat_keep_aspect\train\images)",

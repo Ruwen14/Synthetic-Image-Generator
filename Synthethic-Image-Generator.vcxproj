@@ -154,22 +154,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\simG\annotator\PVOCAnnotator.cpp" />
     <ClCompile Include="src\simG\core\algorithms.cpp" />
     <ClCompile Include="src\simG\main.cpp" />
     <ClCompile Include="src\simG\utils\Timer.cpp" />
     <ClCompile Include="src\simG\utils\foregroundextractor.cpp" />
     <ClCompile Include="src\simG\core\imggenerator.cpp" />
-    <ClCompile Include="src\simG\annotator\CocoISAnnotator.cpp" />
+    <ClCompile Include="src\simG\annotator\COCOAnnotator.cpp" />
     <ClCompile Include="src\simG\annotator\AbstractAnnotator.cpp" />
     <ClCompile Include="src\simG\utils\Directory.cpp" />
     <ClCompile Include="src\simG\core\imgaugmenter.cpp" />
     <ClCompile Include="src\simG\annotator\annotator.cpp" />
     <ClCompile Include="src\simG\utils\Random.cpp" />
-    <ClCompile Include="src\simG\annotator\YoloAnnotator.cpp" />
+    <ClCompile Include="src\simG\annotator\YOLOAnnotator.cpp" />
     <ClCompile Include="src\simG\core\transforms.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\simG\annotator\PVOCAnnotator.h" />
     <ClInclude Include="src\simG\core\algorithms.h" />
+    <ClInclude Include="src\simG\core\functions.h" />
     <ClInclude Include="src\simG\EXTERNAL_TEST.h" />
     <ClInclude Include="src\simG\utils\Timer.h" />
     <ClInclude Include="src\simG.h" />
@@ -177,7 +180,7 @@
     <ClInclude Include="src\simG\utils\foregroundextractor.h" />
     <ClInclude Include="src\simG\core\imggenerator.h" />
     <ClInclude Include="src\simG\utils\helpers.h" />
-    <ClInclude Include="src\simG\annotator\CocoISAnnotator.h" />
+    <ClInclude Include="src\simG\annotator\COCOAnnotator.h" />
     <ClInclude Include="src\simG\annotator\AbstractAnnotator.h" />
     <ClInclude Include="src\simG\core\Exceptions.h" />
     <ClInclude Include="include\simg.h" />
@@ -185,7 +188,7 @@
     <ClInclude Include="src\simG\core\imgaugmenter.h" />
     <ClInclude Include="src\simG\annotator\annotator.h" />
     <ClInclude Include="src\simG\utils\Random.h" />
-    <ClInclude Include="src\simG\annotator\YoloAnnotator.h" />
+    <ClInclude Include="src\simG\annotator\YOLOAnnotator.h" />
     <ClInclude Include="src\simG\core\transforms.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

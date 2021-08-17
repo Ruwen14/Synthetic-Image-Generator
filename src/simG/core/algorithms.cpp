@@ -5,6 +5,7 @@
 
 namespace simG
 {
+	// ToDo add namespace internal
 	namespace algorithms
 	{
 		void composeMatrices(cv::Mat& dstMat, const cv::Mat& inputMat, cv::Point2i location)
@@ -112,6 +113,5 @@ namespace simG
 
 			return s;
 		}
-
 	}
 }

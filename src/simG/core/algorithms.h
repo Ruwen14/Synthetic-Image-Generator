@@ -4,6 +4,7 @@
 
 namespace simG
 {
+	// TODO: rename to functions.h
 	namespace algorithms
 	{
 		/** @brief Overlays/Composes two matrices together.
