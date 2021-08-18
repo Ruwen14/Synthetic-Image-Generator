@@ -35,14 +35,100 @@ using simG::print;
 //# endif
 //#endif
 
+// From https://github.com/TheCherno/Hazel/blob/master/Hazel/src/Hazel/Core/PlatformDetection.h
+// Platform detection using predefined macros
+//#ifdef _WIN32
+//	/* Windows x64/x86 */
+//#ifdef _WIN64
+//	/* Windows x64  */
+//#define HZ_PLATFORM_WINDOWS
+//#else
+//	/* Windows x86 */
+//#error "x86 Builds are not supported!"
+//#endif
+//#elif defined(__APPLE__) || defined(__MACH__)
+//#include <TargetConditionals.h>
+///* TARGET_OS_MAC exists on all the platforms
+// * so we must check all of them (in this order)
+// * to ensure that we're running on MAC
+// * and not some other Apple platform */
+//#if TARGET_IPHONE_SIMULATOR == 1
+//#error "IOS simulator is not supported!"
+//#elif TARGET_OS_IPHONE == 1
+//#define HZ_PLATFORM_IOS
+//#error "IOS is not supported!"
+//#elif TARGET_OS_MAC == 1
+//#define HZ_PLATFORM_MACOS
+//#error "MacOS is not supported!"
+//#else
+//#error "Unknown Apple platform!"
+//#endif
+// /* We also have to check __ANDROID__ before __linux__
+//  * since android is based on the linux kernel
+//  * it has __linux__ defined */
+//#elif defined(__ANDROID__)
+//#define HZ_PLATFORM_ANDROID
+//#error "Android is not supported!"
+//#elif defined(__linux__)
+//#define HZ_PLATFORM_LINUX
+//#error "Linux is not supported!"
+//#else
+//	/* Unknown compiler/platform */
+//#error "Unknown platform!"
+//#endif // End of platform detection
 
 namespace sa = simG::annotators;
 
+void testStringAsXml(const std::string& savepath)
+{
+	std::ostringstream xml;
+
+	// TODO: Candidate for fmt lib
+	std::string folder = "VOC2012";
+	std::string filename = "007_000027.jpg";
+	int width = 486;
+	int height = 500;
+	int depth = 3;
+	int xmin = 174;
+	int ymin = 101;
+	int xmax = 349;
+	int ymax = 351;
+	std::string person = "cat";
+
+	xml << "<annotation>\n	<folder>" << folder << "</folder>\n<filename>" << filename << "</filename>\n<source>\n<database>Unknown</database>\n</source>\n<size>\n<width>" << width << "</width>\n<height>"
+		<< height << "</height>\n<depth>" << depth << "</depth>\n</size>\n<segmented>0</segmented>\n<object>\n<name>" << person << "</name>\n<pose>Unspecified</pose>\n<truncated>0</truncated>\n<difficult>0</difficult>\n<bndbox>\n<xmin>"
+		<< xmin << "</xmin>\n<ymin>" << ymin << "</ymin>\n<xmax>" << xmax << "</xmax>\n<ymax>" << ymax << "</ymax>\n</bndbox>\n</object>\n</annotation>\n";
+
+	xml << "<annotation>\n<folder>" << folder << "</folder>\n<filename>" << filename << "</filename>\n<source>\n<database>Unknown</database>\n</source>\n<size>\n<width>" << width << "</width>\n<height>"
+		<< height << "</height>\n<depth>" << depth << "</depth>\n</size>\n<segmented>0</segmented>\n<object>\n<name>" << person << "</name>\n<pose>Unspecified</pose>\n<truncated>0</truncated>\n<difficult>0</difficult>\n<bndbox>\n<xmin>"
+		<< xmin << "</xmin>\n<ymin>" << ymin << "</ymin>\n<xmax>" << xmax << "</xmax>\n<ymax>" << ymax << "</ymax>\n</bndbox>\n</object>\n</annotation>\n";
+	std::ofstream b(savepath);
+
+	b << xml.str();
+}
+
+void testenv()
+{
+	for (size_t i = 0; i < 10; i++)
+	{
+		auto start = std::chrono::high_resolution_clock::now();
+		std::string path = "C:/Users/ruwen/Downloads/";
+		path +=  "anno" + std::to_string(i) + ".xml";
+		testStringAsXml(path);
+
+		auto end = std::chrono::high_resolution_clock::now();
+		duration<double, std::milli> ms_double = end - start;
+		std::cout << ms_double.count() << "ms\n";
+	}
+}
+
 int main()
 {
-	sa::COCOAnnotator("hi", sa::COCOAnnotator::KEYPOINTS);
+	testenv();
+	exit(0);
+	sa::COCOAnnotator annotator("hi", sa::COCOAnnotator::KEYPOINTS);
 	//std::variant<int, simG::ImageGenerator> vec;
-	// TODO: Use RapidXML for parsing XML; it's header-only and pretty fast.
+	// TODO: Use RapidXML for parsing XML; it's header-only and pretty fast. But PugiXML is more convenient and still fast
 
 	//TEST_RAPIDJSON();
 	//yoloDetect();
@@ -99,7 +185,7 @@ int main()
 	//overlayImage(back, back, { 0,0 });
 	//cv::imshow("", back);
 	//cv::waitKey(0);
-
+	//
 	// ToDo: check out https://github.com/jbohnslav/opencv_transforms/blob/master/opencv_transforms/transforms.py
 	//simG::transforms::RandomRotation layer({ 60,60 });
 	//simG::transforms::Sequential transforms({

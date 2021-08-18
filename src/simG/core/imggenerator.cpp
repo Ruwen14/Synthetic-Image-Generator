@@ -75,12 +75,10 @@ namespace simG
 
 	void ImageGenerator::setInput(const Directory& maskdir, const Directory& bckdir)
 	{
-
 	}
 
 	void ImageGenerator::setOutput(const Directory& out)
 	{
-
 	}
 
 	void ImageGenerator::addTransforms(const transforms::Sequential& transforms, TransformTarget target)
@@ -175,14 +173,13 @@ namespace simG
 	}
 
 	void ImageGenerator::preprocess(cv::Mat& mask, cv::Mat& bckgrnd) const
-{
+	{
 		// TODO: augment masks and background
 	}
 
 	void ImageGenerator::postprocess(cv::Mat& result) const
-{
+	{
 		// TODO: augment resultimage
-
 	}
 
 	void ImageGenerator::augmentMask(cv::Mat& maskSample) const

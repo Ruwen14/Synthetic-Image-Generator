@@ -11,6 +11,5 @@
 #include "simG/annotator/COCOAnnotator.h"
 #include "simG/annotator/PVOCAnnotator.h"
 
-
 #include <omp.h>
 #include <opencv2/opencv.hpp>

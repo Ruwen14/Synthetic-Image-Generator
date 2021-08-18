@@ -10,7 +10,6 @@ namespace simG::annotators
 	public:
 		enum Format { OBJ_DET, KEYPOINTS, PANOPTIC, INSTANCE_SEG };
 
-
 		COCOAnnotator(const std::string& annofile_savepath, Format f);
 		~COCOAnnotator() { std::cout << "CocoIsAnnotator destroyed" << "\n"; }
 

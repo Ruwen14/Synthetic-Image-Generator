@@ -3,5 +3,4 @@
 
 namespace simG::internals
 {
-
 }
