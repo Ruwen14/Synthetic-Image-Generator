@@ -131,6 +131,7 @@ namespace simG
 		~ImageGenerator() = default;
 
 		ImageCompound forward(); // return struct of image and annotation (string representation) auto [img, anno]
+		//maybe make so truncutate objects as well
 		void generate(int targetNumber, annotators::AbstractAnnotator* annotator = nullptr); //Rename to apply(dir, dir, outdir)
 		void setInput(const Directory& maskdir, const Directory& bckdir);
 		void setOutput(const Directory& out);

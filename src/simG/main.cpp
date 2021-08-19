@@ -12,7 +12,7 @@
 #include "../../external/rapidjson/stringbuffer.h"
 #include "../../external/rapidjson/filereadstream.h"
 #include <../../external/rapidjson/istreamwrapper.h>
-#include "utils/visualizer/DatasetVisualizer.h"
+#include "utils/datasetviz.h"
 
 #include <iostream>
 #include <chrono>
@@ -102,13 +102,11 @@ void checkSpeed()
 	duration<double, std::milli> ms_double = end - start;
 	std::cout << ms_double.count() << "ms\n";
 	print(dstCntr.size());
-
 }
+
+
 int main()
 {	
-	checkSpeed();
-	exit(0);
-
 	simG::viz::COCOVizualizer coco(R"(C:\Users\ruwen\Desktop\iav_Werkstudent\Dataset\Datasat_keep_aspect\train\synthetic_train_annotations.json)");
 
 	auto st = simG::Timer::startTimer();
@@ -117,7 +115,7 @@ int main()
 	for (const auto& path : imgDir.entries)
 	{
 		auto result = coco.showAnnotations(imgDir.absoluteFilePath(path));
-		cv::imshow("result", result);
+		cv::imshow("Current annotation", result);
 		cv::waitKey(0);
 	}
 

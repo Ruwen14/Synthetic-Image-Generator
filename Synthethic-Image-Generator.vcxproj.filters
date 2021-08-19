@@ -57,6 +57,9 @@
     <ClCompile Include="src\simG\annotator\PVOCAnnotator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\simG\utils\datasetviz.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\simG\utils\Random.h">
@@ -117,6 +120,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\simG\core\functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\simG\utils\datasetviz.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
