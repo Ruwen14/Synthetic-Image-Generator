@@ -15,12 +15,14 @@ namespace simG
 {
 	namespace annotators
 	{
-		COCOAnnotator::COCOAnnotator(const std::string& annofile_savepath, Format f) : AbstractAnnotator(annofile_savepath)
+		COCOAnnotator::COCOAnnotator(const std::string& annofile_savepath, Format f) 
+			: AbstractAnnotator(annofile_savepath)
 		{
 		}
 
 		void COCOAnnotator::annotateImg(const std::vector<cv::Mat>& masks, const AnnotationDictionary& annotationDict)
 		{
+			// TODO use RLE to minimize length of semgnetation
 			anno_file_ << "CocoIsAnnotor has written";
 		}
 
