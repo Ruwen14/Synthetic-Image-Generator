@@ -355,7 +355,6 @@ namespace simG
 
 		void Sequential2::apply(const cv::Mat& src, cv::Mat& dst) const
 		{
-			assert(3 == 0);
 			dst = src;
 			if (count() == 0)
 				return;
