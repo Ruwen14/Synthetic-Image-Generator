@@ -26,6 +26,8 @@ namespace simG
 		std::string absoluteFilePath(const std::string& file_name) const;
 		std::string absoluteDirPath() const;
 
+		std::vector<std::string> listEntries() const;
+
 		std::string cycleEntry(bool shuffle_on_end = true);
 
 		static bool createDirectory(const std::string& dir_path);

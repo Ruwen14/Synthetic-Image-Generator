@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="external\clipper\clipper.cpp" />
     <ClCompile Include="src\simG\utils\datasetviz.cpp" />
     <ClCompile Include="src\simG\annotator\PVOCAnnotator.cpp" />
     <ClCompile Include="src\simG\core\algorithms.cpp" />
@@ -171,10 +172,11 @@
     <ClCompile Include="src\simG\core\transforms.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="external\clipper\clipper.hpp" />
+    <ClInclude Include="src\simG\core\coreutils.h" />
     <ClInclude Include="src\simG\utils\datasetviz.h" />
     <ClInclude Include="src\simG\annotator\PVOCAnnotator.h" />
     <ClInclude Include="src\simG\core\algorithms.h" />
-    <ClInclude Include="src\simG\core\functions.h" />
     <ClInclude Include="src\simG\EXTERNAL_TEST.h" />
     <ClInclude Include="src\simG\utils\Timer.h" />
     <ClInclude Include="src\simG.h" />

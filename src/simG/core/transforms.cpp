@@ -237,7 +237,7 @@ namespace simG
 
 		Sequential::Sequential(const std::vector<Transformers>& transformsList)
 		{
-			populate(transformsList);
+			//populate(transformsList);
 		}
 
 		void Sequential::apply(const cv::Mat& src, cv::Mat& dst) const
@@ -355,15 +355,15 @@ namespace simG
 
 		void Sequential2::apply(const cv::Mat& src, cv::Mat& dst) const
 		{
-			dst = src;
-			if (count() == 0)
-				return;
+			//dst = src;
+			//if (count() == 0)
+			//	return;
 
-			auto caller = [&dst](const auto& transObj) {dst = transObj(dst); };
-			for (const auto& transformation : transforms_)
-			{
-				std::visit(caller, transformation);
-			}
+			//auto caller = [&dst](const auto& transObj) {dst = transObj(dst); };
+			//for (const auto& transformation : transforms_)
+			//{
+			//	std::visit(caller, transformation);
+			//}
 		}
 
 		void Sequential2::operator()(const cv::Mat& src, cv::Mat& dst) const
@@ -388,18 +388,18 @@ namespace simG
 
 		void Sequential2::measureTransforms(const cv::Mat& src, cv::Mat& dst) const
 		{
-			dst = src;
-			auto caller = [&dst](const auto& transObj) {dst = transObj(dst); };
-			int pos = 0;
-			for (const auto& transformation : transforms_)
-			{
-				auto start = std::chrono::high_resolution_clock::now();
-				std::visit(caller, transformation);
-				auto end = std::chrono::high_resolution_clock::now();
-				std::chrono::duration<double, std::milli> ms_double = end - start;
-				std::cout << "LAYER <" << pos << ">: took " << ms_double.count() << "ms\n";
-				++pos;
-			}
+			//dst = src;
+			//auto caller = [&dst](const auto& transObj) {dst = transObj(dst); };
+			//int pos = 0;
+			//for (const auto& transformation : transforms_)
+			//{
+			//	auto start = std::chrono::high_resolution_clock::now();
+			//	std::visit(caller, transformation);
+			//	auto end = std::chrono::high_resolution_clock::now();
+			//	std::chrono::duration<double, std::milli> ms_double = end - start;
+			//	std::cout << "LAYER <" << pos << ">: took " << ms_double.count() << "ms\n";
+			//	++pos;
+			//}
 		}
 
 		int Sequential2::count() const
@@ -409,20 +409,21 @@ namespace simG
 
 		std::string Sequential2::dump() const
 		{
-			std::stringstream out;
-			int pos = 0;
-			auto stringifier = [](const auto& transObj) {return transObj.getType(); };
+			//std::stringstream out;
+			//int pos = 0;
+			//auto stringifier = [](const auto& transObj) {return transObj.getType(); };
 
-			out << typeid(*this).name() << " {\n";
-			for (const auto& trans : transforms_)
-			{
-				out << "\tINDEX <" << pos << ">: " << std::visit(stringifier, trans) << "\n";
+			//out << typeid(*this).name() << " {\n";
+			//for (const auto& trans : transforms_)
+			//{
+			//	out << "\tINDEX <" << pos << ">: " << std::visit(stringifier, trans) << "\n";
 
-				++pos;
-			}
-			out << "}\n";
+			//	++pos;
+			//}
+			//out << "}\n";
 
-			return out.str();
+			//return out.str();
+			return "";
 		}
 	}
 }

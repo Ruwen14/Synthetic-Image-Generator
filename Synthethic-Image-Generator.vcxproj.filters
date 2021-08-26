@@ -60,6 +60,9 @@
     <ClCompile Include="src\simG\utils\datasetviz.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="external\clipper\clipper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\simG\utils\Random.h">
@@ -119,10 +122,13 @@
     <ClInclude Include="src\simG\annotator\PVOCAnnotator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\simG\core\functions.h">
+    <ClInclude Include="src\simG\utils\datasetviz.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\simG\utils\datasetviz.h">
+    <ClInclude Include="src\simG\core\coreutils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\clipper\clipper.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

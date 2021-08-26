@@ -68,6 +68,11 @@ namespace simG
 		return std::filesystem::absolute(dir_path).string();
 	}
 
+	std::vector<std::string> Directory::listEntries() const
+	{
+		return list_entries(dir_path);
+	}
+
 	// gets the next file-entry in the directory.
 	// Restarts from begining if last element is hit. The entry-list can be shuffled if shuffle_on_end is set true
 	std::string Directory::cycleEntry(bool shuffle_on_end /*= true*/)

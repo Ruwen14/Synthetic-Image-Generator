@@ -63,7 +63,6 @@ namespace simG::viz
 		//auto annotationsToDraw = queryAnnotations(imageid);
 		//simG::Timer::timeElapsed(querytime);
 
-
 		auto drawingtime = simG::Timer::startTimer();
 
 		for (rapidjson::Value::ConstValueIterator itr = json_["annotations"].Begin(); itr != json_["annotations"].End(); ++itr)
@@ -76,22 +75,27 @@ namespace simG::viz
 				cv::Point upperleft(static_cast<int>((*itr)["bbox"][0].GetDouble()), static_cast<int>((*itr)["bbox"][1].GetDouble()));
 				cv::Point bottomright(upperleft + cv::Point(static_cast<int>((*itr)["bbox"][2].GetDouble()), static_cast<int>((*itr)["bbox"][3].GetDouble())));
 
+				if (drawbbox_)
+					drawBBox(dst, upperleft, bottomright, color);
 
-				drawBBox(dst, upperleft, bottomright, color);
 				std::cout << "Category <" << getCategoryById((*itr)["category_id"].GetInt()) << "> @ " << upperleft << "\n";
 
-				drawCategoryTag(dst, getCategoryById((*itr)["category_id"].GetInt()), upperleft, color);
+				if (drawcat_)
+					drawCategoryTag(dst, getCategoryById((*itr)["category_id"].GetInt()), upperleft, color);
 
-				if ((*itr).HasMember("segmentation")) {
-					std::vector<double> seglist;
-					size_t size = (*itr)["segmentation"][0].GetArray().Size();
-					seglist.reserve(size);
+				if (drawmask_)
+				{
+					if ((*itr).HasMember("segmentation"))
+					{
+						std::vector<double> seglist;
+						size_t size = (*itr)["segmentation"][0].GetArray().Size();
+						seglist.reserve(size);
 
-					for (rapidjson::Value::ConstValueIterator segitr = (*itr)["segmentation"][0].Begin(); segitr != (*itr)["segmentation"][0].End(); ++segitr) {
-						seglist.push_back((*segitr).GetDouble());
+						for (rapidjson::Value::ConstValueIterator segitr = (*itr)["segmentation"][0].Begin(); segitr != (*itr)["segmentation"][0].End(); ++segitr) {
+							seglist.push_back((*segitr).GetDouble());
+						}
+						drawSegmentationMask(dst, translateListToContour(seglist), color);
 					}
-
-					drawSegmentationMask(dst, translateListToContour(seglist), color);
 				}
 			}
 		}

@@ -83,20 +83,20 @@ namespace simG
 
 	void ImageGenerator::addTransforms(const transforms::Sequential& transforms, TransformTarget target)
 	{
-		switch (target)
-		{
-		case APPLY_ON_MASK:
-			this->maskTransforms_ = transforms;
-			break;
-		case APPLY_ON_BCKGROUND:
-			this->bckgrTransforms_ = transforms;
-			break;
-		case APPLY_ON_RESULT:
-			this->resultTransforms_ = transforms;
-			break;
-		default:
-			break;
-		}
+		//switch (target)
+		//{
+		//case APPLY_ON_MASK:
+		//	this->maskTransforms_ = transforms;
+		//	break;
+		//case APPLY_ON_BCKGROUND:
+		//	this->bckgrTransforms_ = transforms;
+		//	break;
+		//case APPLY_ON_RESULT:
+		//	this->resultTransforms_ = transforms;
+		//	break;
+		//default:
+		//	break;
+		//}
 	}
 
 	void ImageGenerator::setThreading(ThreadingStatus tStatus)

@@ -226,6 +226,10 @@ namespace simG
 		public:
 			GaussianBlur(double chance, cv::Size kSize = { 3,3 })
 				: chance_(chance), kernelsize_(kSize) {}
+
+			GaussianBlur& operator =(const GaussianBlur& seq) { std::cout << "assigned GaussianBlur\n"; return *this; }
+			GaussianBlur(const GaussianBlur&) {std::cout << "Copied GaussianBlur\n"; }
+			GaussianBlur(GaussianBlur&&) { std::cout << "moved GaussianBlur\n";}
 			//virtual ~GaussianBlur() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
@@ -286,14 +290,19 @@ namespace simG
 		class Sequential2
 		{
 		public:
-			using Transform = std::variant<
-				RandomRotation, RandomRotation90, RandomRotation180, RandomRotation270, RandomHorizontalFlip,
-				RandomVerticalFlip, RandomCrop, Resize, RandomScale, RandomBrightness, RandomGaussNoise, GaussianBlur>;
+			//using Transform = std::variant<
+			//	RandomRotation, RandomRotation90, RandomRotation180, RandomRotation270, RandomHorizontalFlip,
+			//	RandomVerticalFlip, RandomCrop, Resize, RandomScale, RandomBrightness, RandomGaussNoise, GaussianBlur>;
+
+			using Transform = GaussianBlur;
+
 
 			Sequential2() = default;
 			Sequential2(const std::vector<Transform>& transformations);
 			//Sequential(const Sequential&) = delete;
-			//Sequential(const Sequential&) {std::cout << "Copied Sequential\n"; }
+			//Sequential2& operator =(const Sequential2& seq) { std::cout << "assigned Sequential\n"; return *this; }
+			//Sequential2(const Sequential2&) {std::cout << "Copied Sequential\n"; }
+			//Sequential2(Sequential2&&) { std::cout << "moved Sequential\n";}
 			~Sequential2() = default;
 
 			/** @brief Applies selected transformations to an input sample.
@@ -332,6 +341,23 @@ namespace simG
 
 		private:
 			std::vector<Transform> transforms_;
+		};
+
+		template <size_t dSize>
+		class Sequential3
+		{
+		public:
+			using Transform = std::variant<
+				RandomRotation, RandomRotation90, RandomRotation180, RandomRotation270, RandomHorizontalFlip,
+				RandomVerticalFlip, RandomCrop, Resize, RandomScale, RandomBrightness, RandomGaussNoise, GaussianBlur>;
+
+			Sequential3(const std::array<Transform, dSize>& transformations)
+				: m_transforms(transformations)
+			{}
+
+
+		private:
+			std::array<Transform, dSize> m_transforms;
 		};
 	}
 }
