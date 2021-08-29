@@ -12,7 +12,7 @@ namespace simG
 		*@param inputMat:  input Matrix.
 		*@param location:  x/y-coordinates where overlay will happen.
 		*/
-		void composeMatrices(cv::Mat& dstMat, const cv::Mat& inputMat, cv::Point2i location);
+		void composeMatrices(cv::Mat& dstMat, const cv::Mat& inputMat, cv::Point location);
 
 		/** @brief Checks if two Arrays/Vectors of Points intersect.
 		*@param refContour:  Vector 1.

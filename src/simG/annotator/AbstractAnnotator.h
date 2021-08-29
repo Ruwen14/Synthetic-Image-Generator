@@ -35,11 +35,23 @@ namespace simG::annotators
 		virtual ~AbstractAnnotator() { std::cout << "AbstractAnnotator destroyed" << "\n"; }
 
 		// ToDo: uSE Struct with all kinds of infos :)
-		virtual void annotateImg(const std::vector<cv::Mat>& masks, const AnnotationDictionary& annotationDict) = 0;
+		virtual void forward(const std::vector<cv::Mat>& masks, const AnnotationDictionary& annotationDict) = 0;
 		virtual void close();
+
+		/** @brief Setter method to enable annotation-clipping for overlapping object-instances.
+		Following annotations will be clipped: segmentation-polygons, segmentation-masks.
+		 @param clip(boolean) true if received annotations should be clipped, false if not. False by default.
+		*/
+		void setClipAnns(bool clip);
+
+		/** @brief Getter-method to check if annotator will use clipped annotations.
+		@return true or false
+		*/
+		bool isClipAnns();
 
 	protected:
 		AnnotationFile anno_file_;
+		bool m_clipAnns = false;
 	};
 
 	//struct BBox

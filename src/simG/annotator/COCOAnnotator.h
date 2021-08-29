@@ -13,6 +13,6 @@ namespace simG::annotators
 		COCOAnnotator(const std::string& annofile_savepath, Format f);
 		~COCOAnnotator() { std::cout << "CocoIsAnnotator destroyed" << "\n"; }
 
-		void annotateImg(const std::vector<cv::Mat>& masks, const AnnotationDictionary& annotationDict) override;
+		void forward(const std::vector<cv::Mat>& masks, const AnnotationDictionary& annotationDict) override;
 	};
 }

@@ -228,8 +228,8 @@ namespace simG
 				: chance_(chance), kernelsize_(kSize) {}
 
 			GaussianBlur& operator =(const GaussianBlur& seq) { std::cout << "assigned GaussianBlur\n"; return *this; }
-			GaussianBlur(const GaussianBlur&) {std::cout << "Copied GaussianBlur\n"; }
-			GaussianBlur(GaussianBlur&&) { std::cout << "moved GaussianBlur\n";}
+			GaussianBlur(const GaussianBlur&) { std::cout << "Copied GaussianBlur\n"; }
+			GaussianBlur(GaussianBlur&&) { std::cout << "moved GaussianBlur\n"; }
 			//virtual ~GaussianBlur() = default;
 
 			cv::Mat operator() (cv::Mat& srcSample) const override;
@@ -296,7 +296,6 @@ namespace simG
 
 			using Transform = GaussianBlur;
 
-
 			Sequential2() = default;
 			Sequential2(const std::vector<Transform>& transformations);
 			//Sequential(const Sequential&) = delete;
@@ -354,7 +353,6 @@ namespace simG
 			Sequential3(const std::array<Transform, dSize>& transformations)
 				: m_transforms(transformations)
 			{}
-
 
 		private:
 			std::array<Transform, dSize> m_transforms;

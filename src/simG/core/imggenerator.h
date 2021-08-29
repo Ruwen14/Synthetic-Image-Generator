@@ -3,6 +3,7 @@
 #include "../annotator/AbstractAnnotator.h"
 #include "../utils/Directory.h"
 #include "transforms.h"
+#include "types.h"
 
 #include <iostream>
 #include <string>
@@ -133,13 +134,21 @@ namespace simG
 		ImageCompound forward(); // return struct of image and annotation (string representation) auto [img, anno]
 		//maybe make so truncutate objects as well
 		void generate(int targetNumber, annotators::AbstractAnnotator* annotator = nullptr); //Rename to apply(dir, dir, outdir)
-		void setInput(const Directory& maskdir, const Directory& bckdir);
-		void setOutput(const Directory& out);
 		void addTransforms(const transforms::Sequential& transforms, TransformTarget target);
 		void setThreading(ThreadingStatus tStatus);
 		void setNumberObjects(int lower, int upper);
 		bool isThreadingEnabled() const;
+		/**
+		 * @brief
+		 * @param xFactor upperleft
+		 * @param yFactor
+		 * @param widthFactor
+		 * @param heightFactor
+		 * @param overlapFactor(double) 0.1 means 10\% overlap
+		*/
+		void setPlacementPolicy(const ContentMargins& margins, double overlapFactor) {}
 
+		bool saveImgMagickFast();
 	public:
 		void runSequential_();
 		void runParallel_();
@@ -150,6 +159,7 @@ namespace simG
 		void compose(const cv::Mat& srcComp1, const cv::Mat& srcComp2, cv::Mat& dst) const;
 		bool overlap() const;
 
+	public:
 		Directory maskDir_;
 		Directory bckgrDir_;
 		simG::Range<int> numberObjects_;

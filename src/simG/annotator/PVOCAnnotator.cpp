@@ -2,7 +2,7 @@
 
 namespace simG::annotators
 {
-	void PVOCAnnotator::annotateImg(const std::vector<cv::Mat>& masks, const AnnotationDictionary& annotationDict)
+	void PVOCAnnotator::forward(const std::vector<cv::Mat>& masks, const AnnotationDictionary& annotationDict)
 	{
 		throw std::logic_error("The method or operation is not implemented.");
 	}

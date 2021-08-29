@@ -73,14 +73,6 @@ namespace simG
 		}
 	}
 
-	void ImageGenerator::setInput(const Directory& maskdir, const Directory& bckdir)
-	{
-	}
-
-	void ImageGenerator::setOutput(const Directory& out)
-	{
-	}
-
 	void ImageGenerator::addTransforms(const transforms::Sequential& transforms, TransformTarget target)
 	{
 		//switch (target)

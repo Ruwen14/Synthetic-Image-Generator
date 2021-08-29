@@ -20,8 +20,6 @@ using std::chrono::duration_cast;
 using std::chrono::duration;
 using std::chrono::milliseconds;
 
-
-
 void ADD_COCO()
 {
 	// COCO STRUCTURE
@@ -168,8 +166,8 @@ Pos getRandomPos(const cv::Size& backSize, const cv::Size& maskSize)
 	return { simG::Random::uniformInt(0, max_x), simG::Random::uniformInt(0, max_y) };
 }
 
-using CvContours = std::vector<std::vector<cv::Point>>;
-void overlay1(const cv::Mat& mask, const cv::Size& backsize, CvContours& cntrs)
+using CvContourss = std::vector<std::vector<cv::Point>>;
+void overlay1(const cv::Mat& mask, const cv::Size& backsize, CvContourss& cntrs)
 {
 	cv::Mat tmp = cv::Mat::zeros(cv::Size(backsize.width, backsize.height), CV_8UC1);
 
@@ -180,7 +178,7 @@ void overlay1(const cv::Mat& mask, const cv::Size& backsize, CvContours& cntrs)
 	cv::findContours(tmp, cntrs, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 }
 
-void overlay2(const cv::Mat& mask, const cv::Size& backsize, CvContours& cntrs)
+void overlay2(const cv::Mat& mask, const cv::Size& backsize, CvContourss& cntrs)
 {
 	cv::Mat tmp = cv::Mat::zeros(cv::Size(backsize.width, backsize.height), CV_8UC1);
 
@@ -201,8 +199,8 @@ void test_overlay()
 	auto back = cv::imread(R"(C:\Users\ruwen\Desktop\Learning_CPP\Synthethic-Image-Generator\Test\background0.jpg)");
 
 	auto pos = getRandomPos(back.size(), mask.size());
-	CvContours cntrs1;
-	CvContours cntrs2;
+	CvContourss cntrs1;
+	CvContourss cntrs2;
 	//auto start = std::chrono::high_resolution_clock::now();
 
 	overlay1(mask, back.size(), cntrs1);

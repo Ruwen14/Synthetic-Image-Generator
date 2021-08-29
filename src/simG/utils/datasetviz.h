@@ -51,7 +51,6 @@ namespace simG::viz
 		std::vector<cv::Scalar> colormap_;
 	};
 
-
 	/**
 	 * @brief Vizualizer for the COCO-Dataset-Format. Supports formats: (object detection, instance segmentation and semantic segmentation). Inherits from class DatasetVizualizer
 	*/

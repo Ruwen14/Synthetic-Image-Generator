@@ -12,7 +12,7 @@ namespace simG::annotators
 		//needs virtual destructor
 		~PVOCAnnotator() = default;
 
-		void annotateImg(const std::vector<cv::Mat>& masks, const AnnotationDictionary& annotationDict) override;
+		void forward(const std::vector<cv::Mat>& masks, const AnnotationDictionary& annotationDict) override;
 
 		void close() override;
 	};

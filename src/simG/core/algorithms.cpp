@@ -8,7 +8,7 @@ namespace simG
 	// ToDo add namespace internal
 	namespace algorithms
 	{
-		void composeMatrices(cv::Mat& dstMat, const cv::Mat& inputMat, cv::Point2i location)
+		void composeMatrices(cv::Mat& dstMat, const cv::Mat& inputMat, cv::Point location)
 		{
 			auto mask_channels = inputMat.channels();
 			auto background_channels = dstMat.channels();

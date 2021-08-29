@@ -11,4 +11,14 @@ namespace simG::annotators
 	{
 		anno_file_.close();
 	}
+
+	void AbstractAnnotator::setClipAnns(bool clip)
+	{
+		m_clipAnns = clip;
+	}
+
+	bool AbstractAnnotator::isClipAnns()
+	{
+		return m_clipAnns;
+	}
 }
