@@ -10,6 +10,13 @@ from PIL import Image, ImageEnhance, ImageDraw
 from skimage import measure
 import numpy as np
 
+from shapely.geometry import Polygon
+
+polya = Polygon([(0, 0), (0, 1), (1, 1), (1, 0)])
+polyb = Polygon([(0.5, 0.5), (0.5, 0.8), (0.8, 0.8), (0.8, 0.5)])
+
+polya.contains(polyb)
+
 def close_contour(contour: np.ndarray) -> np.ndarray:
     if not np.array_equal(contour[0], contour[-1]):
         contour = np.vstack((contour, contour[0]))

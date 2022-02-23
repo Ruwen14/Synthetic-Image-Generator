@@ -25,7 +25,7 @@ namespace simG
 
 		void translateContour(std::vector<cv::Point>& contour, int dx, int dy);
 
-		void simplifyContour(const std::vector<cv::Point>& srcCntr, std::vector<cv::Point>& dstCntr, float tolerance);
+		void simplifyContour(const std::vector<cv::Point>& srcCntr, std::vector<cv::Point>& dstCntr, double tolerance);
 
 		// from https://stackoverflow.com/questions/440133/how-do-i-create-a-random-alpha-numeric-string-in-c
 		std::string pseudoUniqueIdentifier(size_t length);

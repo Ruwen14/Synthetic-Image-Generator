@@ -155,6 +155,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="external\clipper\clipper.cpp" />
+    <ClCompile Include="src\cpputils\iniparser.cpp" />
+    <ClCompile Include="src\cpputils\FileDirectory.cpp" />
+    <ClCompile Include="src\simG\utils\Polygon.cpp" />
     <ClCompile Include="src\simG\utils\datasetviz.cpp" />
     <ClCompile Include="src\simG\annotator\PVOCAnnotator.cpp" />
     <ClCompile Include="src\simG\core\algorithms.cpp" />
@@ -173,6 +176,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\clipper\clipper.hpp" />
+    <ClInclude Include="src\cpputils\cdebug.h" />
+    <ClInclude Include="src\cpputils\iniparser.h" />
+    <ClInclude Include="src\cpputils\FileDirectory.h" />
+    <ClInclude Include="src\cpputils\cpputils.h" />
+    <ClInclude Include="src\cpputils\magic_enum.h" />
+    <ClInclude Include="src\cpputils\optionsmap.h" />
+    <ClInclude Include="src\cpputils\prettyprint.h" />
+    <ClInclude Include="src\cpputils\stringutils.h" />
+    <ClInclude Include="src\cpputils\typecheck.h" />
+    <ClInclude Include="src\simG\utils\Polygon.h" />
     <ClInclude Include="src\simG\core\coreutils.h" />
     <ClInclude Include="src\simG\utils\datasetviz.h" />
     <ClInclude Include="src\simG\annotator\PVOCAnnotator.h" />
@@ -194,6 +207,7 @@
     <ClInclude Include="src\simG\utils\Random.h" />
     <ClInclude Include="src\simG\annotator\YOLOAnnotator.h" />
     <ClInclude Include="src\simG\core\transforms.h" />
+    <ClInclude Include="src\cpputils\timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

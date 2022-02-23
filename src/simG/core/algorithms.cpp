@@ -88,9 +88,10 @@ namespace simG
 			}
 		}
 
-		void simplifyContour(const std::vector<cv::Point>& srcCntr, std::vector<cv::Point>& dstCntr, float tolerance)
+		void simplifyContour(const std::vector<cv::Point>& srcCntr, std::vector<cv::Point>& dstCntr, double tolerance)
 		{
 			auto eps = tolerance * cv::arcLength(srcCntr, true);
+			//auto eps = (srcCntr.size() / (3 * 35)) * 2;
 			cv::approxPolyDP(srcCntr, dstCntr, eps, true);
 		}
 

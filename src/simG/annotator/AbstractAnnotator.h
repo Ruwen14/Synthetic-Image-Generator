@@ -14,8 +14,20 @@ namespace simG::annotators
 	using AnnotationDictionaryValues = std::variant<int, double, std::string, std::vector<cv::Point>>;
 	using AnnotationDictionary = std::map<std::string, AnnotationDictionaryValues>;
 
-	struct ImgMetaInfo
+	struct ObjectAnnotation
 	{
+		std::string category;
+		std::vector<cv::Point> segpoints;
+		std::array<int, 4> bbox;
+		int catid;
+	};
+	struct AnnotationDetails
+	{
+		std::vector<ObjectAnnotation> objannots;
+		std::string filename;
+		int imgid;
+		int channels;
+		cv::Size imgdim;
 	};
 
 	struct SynImg
