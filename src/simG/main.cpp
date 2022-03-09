@@ -824,22 +824,28 @@ template<typename T, typename = typename
 }
 
 
-template<typename T, typename U>
-T string_cast(const U& u) {
 
-}
+struct A
+{
 
+};
 
-template<typename T>
-std::string string_cast<std::string>(const T& u) {
-}
+//namespace cpputils
+//{
+//	template <>
+//	cast_result<A> str_cast(std::string_view str)
+//	{
+//		print("Hwadey");
+//		return {};
+//	}
+//}
 
-template<typename T>
-std::wstring string_cast<T>(const std::string& u) {
-}
 
 int main()
 {
+	auto b = cpputils::str_cast<A>("Hey");
+	//print(*b);
+
 	//simG::ThreadingStatus status = simG::ThreadingStatus::NUM_THREADS_4;
 	//std::string str = "We think in , but we live in details.";
 
