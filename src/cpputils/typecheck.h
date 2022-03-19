@@ -4,6 +4,12 @@
 
 namespace cpputils
 {
+	template<typename type, typename object>
+	inline bool isinstance(const object& obj)
+	{
+		return typeid(obj) == typeid(type);
+	}
+
 	template<typename T, typename = void>
 	struct is_std_container : std::false_type {};
 

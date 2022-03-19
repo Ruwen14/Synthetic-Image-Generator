@@ -827,7 +827,10 @@ template<typename T, typename = typename
 
 struct A
 {
-
+	int stuff(int a) {
+		print(a);
+		return 0;
+	}
 };
 
 //namespace cpputils
@@ -840,11 +843,12 @@ struct A
 //	}
 //}
 
-
 int main()
 {
-	auto b = cpputils::str_cast<A>("Hey");
-	//print(*b);
+	//if (b)
+	//{
+	//	print("hey");
+	//}
 
 	//simG::ThreadingStatus status = simG::ThreadingStatus::NUM_THREADS_4;
 	//std::string str = "We think in , but we live in details.";
@@ -869,14 +873,13 @@ int main()
 	//	cpputils::pprint(*status);
 	//}
 	//cpputils::pprint(color_name);
-
-	const std::string_view view = "hey";
 	std::complex<double> foo = 1. + 2.5i;
 	std::complex<double> bar = 9. + 4i;
 	std::optional<int> opt = 5;
 	std::optional<int> opt2;
+	cpputils::pprint(bar);
 
-	//std::pair<int, double> p;
+
 	//p.first = 3;
 	//p.second = 241.1;
 
