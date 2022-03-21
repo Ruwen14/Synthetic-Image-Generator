@@ -173,5 +173,11 @@
     <ClInclude Include="src\cpputils\magic_enum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\cpputils\ECS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cpputils\utilmacros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

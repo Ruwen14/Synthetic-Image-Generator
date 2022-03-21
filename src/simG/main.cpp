@@ -825,26 +825,112 @@ template<typename T, typename = typename
 
 
 
-struct A
+#include "../cpputils/ECS.h"
+
+class TransformationComponent : public ECS::ESCComponent<TransformationComponent>
 {
-	int stuff(int a) {
-		print(a);
-		return 0;
-	}
+
 };
 
-//namespace cpputils
-//{
-//	template <>
-//	cast_result<A> str_cast(std::string_view str)
-//	{
-//		print("Hwadey");
-//		return {};
-//	}
-//}
 
+class w : public ECS::ESCComponent<w>
+{
+
+};
+
+class e : public ECS::ESCComponent<e>
+{
+
+};
+
+struct trans
+{};
+
+
+
+template <class T>
+struct BaseComponent
+{
+	T* as()
+	{
+		return static_cast<T*>(this);
+	}
+
+	virtual ~BaseComponent() {}
+};
+
+template <typename T>
+struct Component : public BaseComponent<T>
+{
+	virtual ~Component() {}
+};
+
+struct PositionComponent : public Component<PositionComponent>
+{
+	float x, y, z;
+
+	virtual ~PositionComponent() {}
+};
+
+template<typename T>
+void adwda(T& base)
+{
+	constexpr auto be = base.as();
+	//print(std::is_same<be, PositionComponent*>::value);
+
+	//print(std::is_same_v<be, PositionComponent*>);
+}
+
+
+
+class Testi
+{
+public:
+	Testi(std::unique_ptr<int> p)
+		: p_(std::move(p)){}
+	
+
+private:
+	std::unique_ptr<int> p_;
+};
+
+
+void doStuff(std::nullptr_t nllptr)
+{
+	print(nllptr);
+}
+
+
+using cpputils::pprint;
+
+template<typename T>
+void smartprint(std::unique_ptr<T>& ptr)
+{
+	if (ptr)
+		pprint(*ptr);
+	else
+		pprint(nullptr);
+}
+
+//template<typename T>
+//auto doStuff(const T& t)
+//{
+//	//return cpputils::converters::ToStrConverter<T>::convert(t);
+//}
 int main()
 {
+	//cpputils::pprint_internal(intPtr);
+	//cpputils::converters::ToStrConverter<std::unique_ptr<int>>::convert(intPtr);
+	//pprint(intPtr);
+	//cpputils::stringify(30);
+
+	//print(intPtr);
+
+	//pprint(nullptr);
+	//doStuff(intPtr);
+
+	//cpputils::pprint(intPtr);
+
 	//if (b)
 	//{
 	//	print("hey");

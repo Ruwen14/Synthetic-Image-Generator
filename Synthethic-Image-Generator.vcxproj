@@ -177,6 +177,7 @@
   <ItemGroup>
     <ClInclude Include="external\clipper\clipper.hpp" />
     <ClInclude Include="src\cpputils\cdebug.h" />
+    <ClInclude Include="src\cpputils\ECS.h" />
     <ClInclude Include="src\cpputils\iniparser.h" />
     <ClInclude Include="src\cpputils\FileDirectory.h" />
     <ClInclude Include="src\cpputils\cpputils.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="src\cpputils\prettyprint.h" />
     <ClInclude Include="src\cpputils\stringutils.h" />
     <ClInclude Include="src\cpputils\typecheck.h" />
+    <ClInclude Include="src\cpputils\utilmacros.h" />
     <ClInclude Include="src\simG\utils\Polygon.h" />
     <ClInclude Include="src\simG\core\coreutils.h" />
     <ClInclude Include="src\simG\utils\datasetviz.h" />
