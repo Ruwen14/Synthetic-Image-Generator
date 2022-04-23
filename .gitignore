@@ -30,6 +30,7 @@
 *.exe
 *.out
 *.app
+main.cpp
 
 x64/
 .vs
@@ -37,3 +38,4 @@ x64/
 weights/
 *.json
 Release/
+Debug/
