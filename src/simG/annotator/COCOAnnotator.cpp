@@ -1,12 +1,12 @@
 #include "COCOAnnotator.h"
 
-#include "../../external/rapidjson/document.h"
-#include "../../external/rapidjson/writer.h"
-#include "../../external/rapidjson/prettywriter.h"
+#include "../../../external/rapidjson/document.h"
+#include "../../../external/rapidjson/writer.h"
+#include "../../../external/rapidjson/prettywriter.h"
 
-#include "../../external/rapidjson/stringbuffer.h"
-#include "../../external/rapidjson/filereadstream.h"
-#include <../../external/rapidjson/istreamwrapper.h>
+#include "../../../external/rapidjson/stringbuffer.h"
+#include "../../../external/rapidjson/filereadstream.h"
+#include "../../../external/rapidjson/istreamwrapper.h"
 
 #include <iostream>
 #include <chrono>
