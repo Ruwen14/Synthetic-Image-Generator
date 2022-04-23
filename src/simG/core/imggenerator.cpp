@@ -217,5 +217,6 @@ namespace simG
 
 	bool ImageGenerator::overlap() const
 	{
+		return true;
 	}
 }
