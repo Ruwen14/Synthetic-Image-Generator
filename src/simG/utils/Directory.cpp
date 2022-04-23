@@ -92,6 +92,7 @@ namespace simG
 	bool Directory::createDirectory(const std::string& dir_path)
 	{
 		std::filesystem::create_directory(dir_path);
+		return true;
 	}
 
 	std::vector<std::string> Directory::list_entries(const std::string& path) const
