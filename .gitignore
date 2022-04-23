@@ -25,12 +25,12 @@
 *.la
 *.a
 *.lib
-
+main.cpp
 # Executables
 *.exe
 *.out
 *.app
-main.cpp
+*.ipynb
 
 x64/
 .vs
@@ -39,3 +39,4 @@ weights/
 *.json
 Release/
 Debug/
+Test/
