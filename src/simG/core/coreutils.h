@@ -95,7 +95,7 @@ namespace simG {
 			return cvcntr;
 		}
 
-		bool doContoursIntersect() {}
+		bool doContoursIntersect() { return true; }
 
 		bool pointInContourRobustButSlow(const CVContour& cntr, cv::Point p)
 		{
