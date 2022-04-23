@@ -29,28 +29,30 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -110,6 +112,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,6 +129,9 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,6 +150,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <OpenMPSupport>true</OpenMPSupport>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,25 +164,63 @@
     <ClCompile Include="external\clipper\clipper.cpp" />
     <ClCompile Include="src\cpputils\iniparser.cpp" />
     <ClCompile Include="src\cpputils\FileDirectory.cpp" />
-    <ClCompile Include="src\simG\utils\Polygon.cpp" />
-    <ClCompile Include="src\simG\utils\datasetviz.cpp" />
-    <ClCompile Include="src\simG\annotator\PVOCAnnotator.cpp" />
-    <ClCompile Include="src\simG\core\algorithms.cpp" />
-    <ClCompile Include="src\simG\main.cpp" />
-    <ClCompile Include="src\simG\utils\Timer.cpp" />
-    <ClCompile Include="src\simG\utils\foregroundextractor.cpp" />
-    <ClCompile Include="src\simG\core\imggenerator.cpp" />
-    <ClCompile Include="src\simG\annotator\COCOAnnotator.cpp" />
     <ClCompile Include="src\simG\annotator\AbstractAnnotator.cpp" />
-    <ClCompile Include="src\simG\utils\Directory.cpp" />
-    <ClCompile Include="src\simG\core\imgaugmenter.cpp" />
     <ClCompile Include="src\simG\annotator\annotator.cpp" />
-    <ClCompile Include="src\simG\utils\Random.cpp" />
+    <ClCompile Include="src\simG\annotator\COCOAnnotator.cpp" />
+    <ClCompile Include="src\simG\annotator\PVOCAnnotator.cpp" />
     <ClCompile Include="src\simG\annotator\YOLOAnnotator.cpp" />
+    <ClCompile Include="src\simG\main.cpp" />
+    <ClCompile Include="src\simG\core\algorithms.cpp" />
+    <ClCompile Include="src\simG\core\imggenerator.cpp" />
+    <ClCompile Include="src\simG\core\imgaugmenter.cpp" />
     <ClCompile Include="src\simG\core\transforms.cpp" />
+    <ClCompile Include="src\simG\utils\datasetviz.cpp" />
+    <ClCompile Include="src\simG\utils\Directory.cpp" />
+    <ClCompile Include="src\simG\utils\foregroundextractor.cpp" />
+    <ClCompile Include="src\simG\utils\Polygon.cpp" />
+    <ClCompile Include="src\simG\utils\Random.cpp" />
+    <ClCompile Include="src\simG\utils\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\clipper\clipper.hpp" />
+    <ClInclude Include="external\rapidjson\allocators.h" />
+    <ClInclude Include="external\rapidjson\cursorstreamwrapper.h" />
+    <ClInclude Include="external\rapidjson\document.h" />
+    <ClInclude Include="external\rapidjson\encodedstream.h" />
+    <ClInclude Include="external\rapidjson\encodings.h" />
+    <ClInclude Include="external\rapidjson\error\en.h" />
+    <ClInclude Include="external\rapidjson\error\error.h" />
+    <ClInclude Include="external\rapidjson\filereadstream.h" />
+    <ClInclude Include="external\rapidjson\filewritestream.h" />
+    <ClInclude Include="external\rapidjson\fwd.h" />
+    <ClInclude Include="external\rapidjson\internal\biginteger.h" />
+    <ClInclude Include="external\rapidjson\internal\clzll.h" />
+    <ClInclude Include="external\rapidjson\internal\diyfp.h" />
+    <ClInclude Include="external\rapidjson\internal\dtoa.h" />
+    <ClInclude Include="external\rapidjson\internal\ieee754.h" />
+    <ClInclude Include="external\rapidjson\internal\itoa.h" />
+    <ClInclude Include="external\rapidjson\internal\meta.h" />
+    <ClInclude Include="external\rapidjson\internal\pow10.h" />
+    <ClInclude Include="external\rapidjson\internal\regex.h" />
+    <ClInclude Include="external\rapidjson\internal\stack.h" />
+    <ClInclude Include="external\rapidjson\internal\strfunc.h" />
+    <ClInclude Include="external\rapidjson\internal\strtod.h" />
+    <ClInclude Include="external\rapidjson\internal\swap.h" />
+    <ClInclude Include="external\rapidjson\istreamwrapper.h" />
+    <ClInclude Include="external\rapidjson\memorybuffer.h" />
+    <ClInclude Include="external\rapidjson\memorystream.h" />
+    <ClInclude Include="external\rapidjson\msinttypes\inttypes.h" />
+    <ClInclude Include="external\rapidjson\msinttypes\stdint.h" />
+    <ClInclude Include="external\rapidjson\ostreamwrapper.h" />
+    <ClInclude Include="external\rapidjson\pointer.h" />
+    <ClInclude Include="external\rapidjson\prettywriter.h" />
+    <ClInclude Include="external\rapidjson\rapidjson.h" />
+    <ClInclude Include="external\rapidjson\reader.h" />
+    <ClInclude Include="external\rapidjson\schema.h" />
+    <ClInclude Include="external\rapidjson\stream.h" />
+    <ClInclude Include="external\rapidjson\stringbuffer.h" />
+    <ClInclude Include="external\rapidjson\uri.h" />
+    <ClInclude Include="external\rapidjson\writer.h" />
     <ClInclude Include="src\cpputils\cdebug.h" />
     <ClInclude Include="src\cpputils\ECS.h" />
     <ClInclude Include="src\cpputils\iniparser.h" />
@@ -187,29 +232,29 @@
     <ClInclude Include="src\cpputils\stringutils.h" />
     <ClInclude Include="src\cpputils\typecheck.h" />
     <ClInclude Include="src\cpputils\utilmacros.h" />
-    <ClInclude Include="src\simG\utils\Polygon.h" />
-    <ClInclude Include="src\simG\core\coreutils.h" />
-    <ClInclude Include="src\simG\utils\datasetviz.h" />
+    <ClInclude Include="src\simG\annotator\AbstractAnnotator.h" />
+    <ClInclude Include="src\simG\annotator\annotator.h" />
+    <ClInclude Include="src\simG\annotator\COCOAnnotator.h" />
     <ClInclude Include="src\simG\annotator\PVOCAnnotator.h" />
+    <ClInclude Include="src\simG\annotator\YOLOAnnotator.h" />
+    <ClInclude Include="src\simG\core\coreutils.h" />
     <ClInclude Include="src\simG\core\algorithms.h" />
     <ClInclude Include="src\simG\EXTERNAL_TEST.h" />
-    <ClInclude Include="src\simG\utils\Timer.h" />
     <ClInclude Include="src\simG.h" />
     <ClInclude Include="src\simG\core\types.h" />
-    <ClInclude Include="src\simG\utils\foregroundextractor.h" />
     <ClInclude Include="src\simG\core\imggenerator.h" />
-    <ClInclude Include="src\simG\utils\helpers.h" />
-    <ClInclude Include="src\simG\annotator\COCOAnnotator.h" />
-    <ClInclude Include="src\simG\annotator\AbstractAnnotator.h" />
     <ClInclude Include="src\simG\core\Exceptions.h" />
     <ClInclude Include="include\simg.h" />
-    <ClInclude Include="src\simG\utils\Directory.h" />
     <ClInclude Include="src\simG\core\imgaugmenter.h" />
-    <ClInclude Include="src\simG\annotator\annotator.h" />
-    <ClInclude Include="src\simG\utils\Random.h" />
-    <ClInclude Include="src\simG\annotator\YOLOAnnotator.h" />
     <ClInclude Include="src\simG\core\transforms.h" />
     <ClInclude Include="src\cpputils\timer.h" />
+    <ClInclude Include="src\simG\utils\datasetviz.h" />
+    <ClInclude Include="src\simG\utils\Directory.h" />
+    <ClInclude Include="src\simG\utils\foregroundextractor.h" />
+    <ClInclude Include="src\simG\utils\helpers.h" />
+    <ClInclude Include="src\simG\utils\Polygon.h" />
+    <ClInclude Include="src\simG\utils\Random.h" />
+    <ClInclude Include="src\simG\utils\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
