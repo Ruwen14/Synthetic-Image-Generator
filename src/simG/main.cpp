@@ -12,7 +12,7 @@
 
 #include "../../external/rapidjson/stringbuffer.h"
 #include "../../external/rapidjson/filereadstream.h"
-#include <../../external/rapidjson/istreamwrapper.h>
+#include "../../external/rapidjson/istreamwrapper.h"
 #include "../cpputils/optionsmap.h"
 #include "../cpputils/timer.h"
 #include "../cpputils/FileDirectory.h"
@@ -879,48 +879,75 @@ void adwda(T& base)
 	//print(std::is_same<be, PositionComponent*>::value);
 
 	//print(std::is_same_v<be, PositionComponent*>);
-}
-
-
-
-class Testi
-{
-public:
-	Testi(std::unique_ptr<int> p)
-		: p_(std::move(p)){}
-	
-
-private:
-	std::unique_ptr<int> p_;
 };
 
 
-void doStuff(std::nullptr_t nllptr)
-{
-	print(nllptr);
-}
+
+#include <any>
+#include <typeindex>
 
 
-using cpputils::pprint;
+
+
+using dispConv = std::function<std::string(std::any)>;
 
 template<typename T>
-void smartprint(std::unique_ptr<T>& ptr)
+dispConv addConverter(std::function<std::string(T)> converterFunc)
 {
-	if (ptr)
-		pprint(*ptr);
-	else
-		pprint(nullptr);
+	const auto convFunc = [converterFunc](const std::any& anyVal) -> std::string
+	{
+		T val = std::any_cast<T>(anyVal);
+		return converterFunc(val);
+	};
+	return convFunc;
 }
 
-//template<typename T>
-//auto doStuff(const T& t)
-//{
-//	//return cpputils::converters::ToStrConverter<T>::convert(t);
-//}
+
+int& re()
+{
+	int b = 3;
+	return b;
+}
+
+
+
 int main()
 {
+
+	cpputils::pprint("Ja");
+
+	std::function<int()> f;
+	{
+		int x = 0;
+		f = [&x]() {
+			return x;  // Boom!
+		};
+	}
+
+
+
+
+
+	return f();  // Boom!
+
+
+
+
+
+	cpputils::pprint("Ja");
+
+
+
+
+
+
+	//std::unordered_map < std::type_index, std::function < std::string(std::any));
+
+
+
 	//cpputils::pprint_internal(intPtr);
 	//cpputils::converters::ToStrConverter<std::unique_ptr<int>>::convert(intPtr);
+
 	//pprint(intPtr);
 	//cpputils::stringify(30);
 
@@ -1452,6 +1479,9 @@ int main()
 	duration<double, std::milli> ms_double = end - start;
 	std::cout << ms_double.count() << "ms\n";
 	std::string warningText =
+
+
+
 		"[WARNING]: Oops. It looks like you tried to enable threading, but forgot to set the '/openmp' flag during compilation. \n"
 		"	   >> Threading was therefore disabled for the rest of the program. \n"
 		"	   -- \n"
@@ -1471,13 +1501,3 @@ int main()
 	//}
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started:
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file s
