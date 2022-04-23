@@ -32,13 +32,16 @@ namespace cpputils
 
 	std::string IniConfig::origin() const
 	{
+		return "";
 	}
 
-	const IniConfig::Section& IniConfig::operator[](std::string_view sect) const
-	{
-	}
+	//const IniConfig::Section& IniConfig::operator[](std::string_view sect) const
+	//{
+	//	return {};
+	//}
 
-	IniConfig::Section& IniConfig::operator[](std::string_view sect)
-	{
-	}
+	//IniConfig::Section& IniConfig::operator[](std::string_view sect)
+	//{
+	//	return {};
+	//}
 }

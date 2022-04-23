@@ -71,6 +71,7 @@ namespace cpputils
 	bool FileDirectory::createDirectory(const std::string& dir_path)
 	{
 		std::filesystem::create_directory(dir_path);
+		return true;
 	}
 
 	std::string FileDirectory::absolutePath() const

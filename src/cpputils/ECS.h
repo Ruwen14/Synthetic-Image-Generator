@@ -2,8 +2,33 @@
 #include <vector>
 #include <unordered_map>
 
+
+struct A {
+	A(const int& v) {
+		p = &v;
+	}
+	void print() {
+		std::cout << *p;
+	}
+	const int* p;
+};
+
+void explicit_temp() {
+	A a(5);     // the temp for 5 is no longer live;
+	a.print();
+}
+
+void temp_from_conversion() {
+	double v = 5;
+	A a(v);     // local v is no longer live.
+	a.print();
+}
+
+
 namespace ECS
 {
+
+
 
 	using Entity = uint32_t;
 	using ComponentID = std::size_t;
